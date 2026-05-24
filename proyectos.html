@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard | GRAN MENTE</title>
+  <title>Mini proyectos | GRAN MENTE</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -27,21 +27,26 @@
 
   <main class="page-main">
     <section class="section narrow page-hero">
-      <p class="eyebrow">Rendimiento y madurez</p>
-      <h1>Dashboard del alumno</h1>
-      <p class="hero-description">El panel crece con cada encuesta. Mientras mas respuestas registra el alumno, mayor es su madurez vocacional y mas precisas son las recomendaciones.</p>
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="index.html#encuesta">Resolver encuesta</a>
-        <a class="btn btn-secondary" href="proyectos.html">Practicar proyectos</a>
+      <p class="eyebrow">Practica sin encuesta</p>
+      <h1>Mini proyectos STEM</h1>
+      <p class="hero-description">Actividades rapidas para que el alumno aprenda haciendo. Puede empezar sin responder la encuesta y luego el dashboard recomendara mejor segun su progreso.</p>
+      <div class="filter-bar">
+        <button class="option-btn active" type="button" data-filter="todos">Todos</button>
+        <button class="option-btn" type="button" data-filter="recomendados">Recomendados</button>
+        <button class="option-btn" type="button" data-filter="programacion">Programacion</button>
+        <button class="option-btn" type="button" data-filter="ia">IA demo</button>
+        <button class="option-btn" type="button" data-filter="robotica">Robotica</button>
       </div>
     </section>
 
-    <section id="dashboardRoot" class="section"></section>
+    <section class="section">
+      <div id="projectGrid" class="project-grid"></div>
+    </section>
   </main>
 
   <footer class="site-footer">
-    <div><strong>GRAN MENTE</strong><p>Progreso guardado localmente en el navegador</p></div>
-    <div><p>No usa base de datos ni backend</p></div>
+    <div><strong>GRAN MENTE</strong><p>Universidad | Curso | Año 2026</p></div>
+    <div><p>Mini proyectos para exposicion academica</p></div>
   </footer>
 
   <script src="script.js"></script>
