@@ -233,6 +233,69 @@ const stemRoutes = {
   }
 };
 
+const architectureLayers = [
+  {
+    label: "Frontend",
+    title: "HTML + CSS + JavaScript",
+    detail: "Pantallas responsive, encuesta IA, dashboard, chatbot, panel docente y rutas STEM."
+  },
+  {
+    label: "API simulada",
+    title: "/api/recommendations",
+    detail: "Recibe respuestas del estudiante y devuelve perfil, carreras, videojuegos y videos."
+  },
+  {
+    label: "Motor IA demo",
+    title: "Reglas + puntajes",
+    detail: "Clasifica intereses por palabras clave y calcula madurez vocacional acumulada."
+  },
+  {
+    label: "Base de datos demo",
+    title: "localStorage",
+    detail: "Guarda alumno, XP, historial, respuestas y perfil dominante en el navegador."
+  },
+  {
+    label: "Seguridad demo",
+    title: "Sesion educativa",
+    detail: "Login de maqueta, datos locales, permisos por rol y mensajes claros de privacidad."
+  },
+  {
+    label: "Deploy",
+    title: "GitHub Pages",
+    detail: "Estructura estatica lista para publicarse sin servidor ni configuracion compleja."
+  }
+];
+
+const simulatedEndpoints = [
+  { method: "POST", path: "/api/auth/login", status: "200 OK", detail: "Valida credenciales demo y crea sesion local." },
+  { method: "POST", path: "/api/survey/analyze", status: "200 OK", detail: "Analiza respuestas y genera perfil STEM." },
+  { method: "GET", path: "/api/student/progress", status: "200 OK", detail: "Devuelve XP, madurez e intereses detectados." },
+  { method: "GET", path: "/api/teacher/classroom", status: "200 OK", detail: "Resume avance del aula para el docente." }
+];
+
+const simulatedTables = [
+  { name: "students", fields: "id, nombre, grado, rol, ultimo_login" },
+  { name: "surveys", fields: "id, student_id, perfil, fecha, puntaje_total" },
+  { name: "answers", fields: "survey_id, pregunta, respuesta, area_stem" },
+  { name: "recommendations", fields: "student_id, carrera, videojuego, video_url" },
+  { name: "audit_logs", fields: "user_id, accion, fecha, dispositivo" }
+];
+
+const securityControls = [
+  "Roles separados: estudiante y docente.",
+  "Datos demo guardados localmente para no exponer informacion real.",
+  "Validacion basica de formularios antes de guardar progreso.",
+  "Enlaces externos abiertos con rel=\"noopener\".",
+  "Arquitectura preparada para migrar a tokens y base de datos real."
+];
+
+const teacherStudents = [
+  { name: "Fernando", grade: "5to", profile: "Programador del Futuro", maturity: 3, xp: 1080, risk: "Activo" },
+  { name: "Lucia", grade: "5to", profile: "Cientifico Creativo", maturity: 2, xp: 740, risk: "Reforzar proyectos" },
+  { name: "Mateo", grade: "4to", profile: "Constructor Robotico", maturity: 4, xp: 1320, risk: "Alto interes" },
+  { name: "Valeria", grade: "5to", profile: "Explorador Tecnologico", maturity: 1, xp: 420, risk: "Completar encuesta" }
+];
+
 const miniProjects = [
   {
     title: "Calculadora STEM",
@@ -741,6 +804,118 @@ function setupDashboard() {
   `;
 }
 
+function setupArchitecture() {
+  const root = document.querySelector("#architectureRoot");
+  if (!root) return;
+  root.innerHTML = architectureLayers.map((layer, index) => `
+    <article class="architecture-card">
+      <span class="node-index">${String(index + 1).padStart(2, "0")}</span>
+      <p class="eyebrow">${layer.label}</p>
+      <h3>${layer.title}</h3>
+      <p>${layer.detail}</p>
+    </article>
+  `).join("");
+}
+
+function setupTeacherPanel() {
+  const root = document.querySelector("#teacherRoot");
+  if (!root) return;
+  const averageMaturity = Math.round((teacherStudents.reduce((sum, student) => sum + student.maturity, 0) / teacherStudents.length) * 10) / 10;
+  const totalXp = teacherStudents.reduce((sum, student) => sum + student.xp, 0);
+  const topProfiles = [...new Set(teacherStudents.map((student) => student.profile))].slice(0, 3);
+
+  root.innerHTML = `
+    <section class="dashboard-grid">
+      <article class="metric-card"><span>Estudiantes monitoreados</span><strong>${teacherStudents.length}</strong></article>
+      <article class="metric-card"><span>Madurez promedio</span><strong>${averageMaturity}/5</strong></article>
+      <article class="metric-card"><span>XP acumulado del aula</span><strong>${totalXp}</strong></article>
+      <article class="metric-card"><span>Rutas dominantes</span><strong>${topProfiles.length}</strong></article>
+    </section>
+    <section class="two-column dashboard-block">
+      <article class="glass-card">
+        <p class="eyebrow">Alertas docentes</p>
+        <h2>Seguimiento rapido del aula</h2>
+        <div class="learning-list">
+          <article><span>Prioridad</span><h4>Completar encuesta inicial</h4><p>Valeria necesita responder la primera encuesta para activar recomendaciones.</p></article>
+          <article><span>Oportunidad</span><h4>Grupo de programacion</h4><p>Fernando y Mateo pueden liderar mini proyectos de apps, robotica y videojuegos.</p></article>
+          <article><span>Refuerzo</span><h4>Mas evidencia practica</h4><p>Lucia deberia registrar un proyecto cientifico para subir su nivel de madurez.</p></article>
+        </div>
+      </article>
+      <article class="glass-card">
+        <p class="eyebrow">Perfiles frecuentes</p>
+        <h2>Intereses que aparecen en el curso</h2>
+        <div class="badges">
+          ${topProfiles.map((profile) => `<span>${profile}</span>`).join("")}
+        </div>
+        <p class="result-copy">La vista docente permite planificar equipos, retos y recursos segun los intereses detectados.</p>
+      </article>
+    </section>
+    <section class="glass-card dashboard-block">
+      <p class="eyebrow">Tabla de estudiantes</p>
+      <h2>Reporte del aula</h2>
+      <div class="table-wrap">
+        <table class="teacher-table">
+          <thead>
+            <tr><th>Alumno</th><th>Grado</th><th>Perfil</th><th>Madurez</th><th>XP</th><th>Estado</th></tr>
+          </thead>
+          <tbody>
+            ${teacherStudents.map((student) => `
+              <tr>
+                <td>${student.name}</td>
+                <td>${student.grade}</td>
+                <td>${student.profile}</td>
+                <td>${student.maturity}/5</td>
+                <td>${student.xp}</td>
+                <td><span class="status-pill">${student.risk}</span></td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  `;
+}
+
+function setupSystemSimulation() {
+  const root = document.querySelector("#systemRoot");
+  if (!root) return;
+  root.innerHTML = `
+    <article class="system-card">
+      <p class="eyebrow">APIs simuladas</p>
+      <h3>Endpoints del prototipo</h3>
+      <div class="endpoint-list">
+        ${simulatedEndpoints.map((endpoint) => `
+          <div class="endpoint-row">
+            <strong>${endpoint.method}</strong>
+            <span>${endpoint.path}</span>
+            <em>${endpoint.status}</em>
+            <p>${endpoint.detail}</p>
+          </div>
+        `).join("")}
+      </div>
+    </article>
+    <article class="system-card">
+      <p class="eyebrow">Base de datos simulada</p>
+      <h3>Modelo de datos propuesto</h3>
+      <div class="db-list">
+        ${simulatedTables.map((table) => `
+          <div>
+            <strong>${table.name}</strong>
+            <span>${table.fields}</span>
+          </div>
+        `).join("")}
+      </div>
+    </article>
+    <article class="system-card">
+      <p class="eyebrow">Seguridad simulada</p>
+      <h3>Controles pensados</h3>
+      <ul class="stem-list">
+        ${securityControls.map((control) => `<li>${control}</li>`).join("")}
+      </ul>
+    </article>
+  `;
+}
+
 function updateCompactProgress() {
   const xpValue = document.querySelector("#xpValue");
   const levelValue = document.querySelector("#levelValue");
@@ -837,6 +1012,9 @@ setupStemHamburgers();
 setupChatbot();
 setupProjects();
 setupDashboard();
+setupArchitecture();
+setupTeacherPanel();
+setupSystemSimulation();
 setupCounters();
 setupReveal();
 setupMenu();

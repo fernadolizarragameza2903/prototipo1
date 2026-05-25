@@ -2,94 +2,109 @@
 
 **Descubre tu potencial STEM**
 
-GRAN MENTE es una maqueta web interactiva de una plataforma educativa con IA simulada para orientar a estudiantes de primaria y secundaria hacia carreras STEM. El prototipo presenta una experiencia visual moderna con encuesta vocacional, recomendaciones dinamicas, chatbot demo, gamificacion y estadisticas de impacto.
+GRAN MENTE es un prototipo web educativo para orientar estudiantes hacia carreras STEM mediante una experiencia moderna, responsive y visualmente impactante. La maqueta simula IA, recomendaciones personalizadas, dashboard del alumno, panel docente, arquitectura tecnica, APIs, base de datos y seguridad.
 
 ## Objetivo
 
-Crear una demostracion visual e interactiva para exposicion, video demo o entrega academica, mostrando como una plataforma EdTech podria combinar:
+Demostrar como una plataforma EdTech podria ayudar a estudiantes de secundaria a descubrir intereses en ciencia, tecnologia, ingenieria y matematicas usando encuestas, gamificacion y recomendaciones dinamicas.
 
-- Orientacion vocacional STEM.
-- Inteligencia artificial simulada.
-- Aprendizaje gamificado.
-- Recomendaciones de carreras, videojuegos y videos educativos.
+## Funcionalidades
 
-## Tecnologias usadas
+- Landing page con login demo.
+- Dashboard del alumno con XP, madurez vocacional e intereses detectados.
+- Encuesta IA con resultados STEM.
+- Recomendaciones de carreras, videojuegos y videos de YouTube.
+- Chatbot IA simulado con respuestas por contexto.
+- Mini proyectos filtrables por area STEM.
+- Panel docente con metricas de aula, alertas y tabla de estudiantes.
+- Arquitectura simulada del sistema.
+- APIs simuladas, base de datos propuesta y controles de seguridad.
+- Persistencia local con `localStorage`.
+- Diseno responsive para laptop, tablet y celular.
+
+## Tecnologias
 
 - HTML5
 - CSS3
 - JavaScript Vanilla
 - Canvas para particulas animadas
-- Responsive design con Flexbox, CSS Grid y media queries
+- CSS Grid, Flexbox y media queries
+- GitHub Pages como despliegue sugerido
 
-No utiliza backend, Node.js, frameworks, bases de datos, APIs reales ni inteligencia artificial real.
+No usa backend, Node.js, frameworks, APIs reales ni IA real. Todo esta simulado desde JavaScript para representar la experiencia final.
 
 ## Estructura del proyecto
 
 ```text
 prototipo1/
-├── index.html
-├── proyectos.html
-├── ia.html
-├── dashboard.html
-├── style.css
-├── script.js
-├── img/
-│   └── hero-brain.png
-└── README.md
+|-- index.html
+|-- proyectos.html
+|-- ia.html
+|-- dashboard.html
+|-- docente.html
+|-- style.css
+|-- script.js
+|-- css/
+|   `-- estilos.css
+|-- js/
+|   `-- main.js
+|-- img/
+|   `-- hero-brain.png
+`-- README.md
 ```
 
-## Funcionalidades del prototipo
+## Flujo de uso
 
-- Hero futurista con imagen de cerebro digital.
-- Seccion informativa sobre IA educativa, exploracion vocacional y gamificacion.
-- Encuesta STEM interactiva de 5 preguntas.
-- Resultados dinamicos con perfil STEM, carreras, videojuego y video recomendado.
-- Chatbot visual con respuestas simuladas, concisas y orientadas a programacion.
-- Lista personalizada ya creada para aprender programacion, filtrada segun las respuestas del alumno.
-- Pagina de mini proyectos STEM que se puede usar sin completar encuestas.
-- Pagina independiente de IA interactiva.
-- Dashboard de rendimiento con XP, encuestas resueltas y nivel de madurez vocacional.
-- Progreso local con `localStorage`: mientras mas encuestas resuelve el alumno, mas sube su madurez y mas precisas son sus recomendaciones.
-- Panel gamificado con XP, nivel e insignias.
-- Contadores animados de impacto.
-- Diagrama visual del flujo de usuario.
-- Diseño responsive para laptop, tablet y celular.
+1. Abrir `index.html`.
+2. Iniciar sesion con el usuario demo `Fernando` y la contrasena `12345`.
+3. Completar la encuesta STEM.
+4. Revisar resultados, carreras, videojuego recomendado y video de YouTube.
+5. Entrar a `dashboard.html` para ver progreso y madurez.
+6. Explorar `proyectos.html` para practicar.
+7. Usar `ia.html` para conversar con el chatbot.
+8. Abrir `docente.html` para mostrar el panel docente y la arquitectura simulada.
 
-## Capturas del prototipo
+## Modulos simulados
 
-Puedes agregar aqui capturas tomadas desde el navegador:
+### API
 
-```text
-img/captura-home.png
-img/captura-resultados.png
-img/captura-mobile.png
-```
+- `POST /api/auth/login`
+- `POST /api/survey/analyze`
+- `GET /api/student/progress`
+- `GET /api/teacher/classroom`
 
-## Instrucciones de uso
+### Base de datos
 
-1. Abre `index.html` en un navegador moderno.
-2. Responde la encuesta desde la pagina principal para guardar progreso.
-3. Abre `dashboard.html` para ver rendimiento y madurez vocacional.
-4. Abre `proyectos.html` para explorar mini proyectos sin encuesta.
-5. Abre `ia.html` para conversar con la IA demo.
+- `students`
+- `surveys`
+- `answers`
+- `recommendations`
+- `audit_logs`
 
-## GitHub Pages deployment
+### Seguridad
 
-1. Sube el proyecto a un repositorio de GitHub.
-2. Entra a **Settings**.
-3. Abre **Pages**.
-4. En **Source**, selecciona la rama `main` y la carpeta `/root`.
-5. Guarda los cambios.
-6. GitHub generara una URL publica para ver el prototipo.
+- Roles separados para estudiante y docente.
+- Datos guardados solo en el navegador.
+- Formularios con validacion basica.
+- Enlaces externos protegidos con `rel="noopener"`.
+- Arquitectura preparada para migrar a tokens, backend y base de datos real.
+
+## Despliegue en GitHub Pages
+
+1. Crear un repositorio en GitHub.
+2. Subir todos los archivos del proyecto.
+3. Entrar a **Settings > Pages**.
+4. Seleccionar la rama `main` y la carpeta `/root`.
+5. Guardar y abrir la URL generada por GitHub Pages.
 
 ## Datos academicos
 
 - Proyecto: GRAN MENTE
-- Universidad: Completar
 - Curso: Completar
+- Universidad: Completar
 - Integrantes: Completar
-- Año: 2026
+- Anio: 2026
 
 ## Nota
 
-Este proyecto es un prototipo demostrativo. Las recomendaciones, el chatbot y el analisis STEM son simulados con JavaScript para representar la experiencia de una plataforma educativa con IA.
+Este proyecto es una maqueta academica. Las recomendaciones, la IA, el dashboard docente, las APIs y la base de datos son simulados para explicar el funcionamiento de una plataforma educativa real.

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mini proyectos | GRAN MENTE</title>
+  <title>Panel docente | GRAN MENTE</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -28,30 +28,29 @@
 
   <main class="page-main">
     <section class="section narrow page-hero">
-      <p class="eyebrow">Practica sin encuesta</p>
-      <h1>Mini proyectos STEM</h1>
-      <p class="hero-description">Actividades rapidas para que Fernando aprenda haciendo. Los recomendados se ordenan segun sus respuestas guardadas en la maqueta.</p>
-      <div id="projectIntro" class="message-box"></div>
-      <div class="filter-bar">
-        <button class="option-btn" type="button" data-filter="todos">Todos</button>
-        <button class="option-btn active" type="button" data-filter="recomendados">Recomendados</button>
-        <button class="option-btn" type="button" data-filter="programacion">Programacion</button>
-        <button class="option-btn" type="button" data-filter="ia">IA demo</button>
-        <button class="option-btn" type="button" data-filter="ciencia">Ciencia</button>
-        <button class="option-btn" type="button" data-filter="ingenieria">Ingenieria</button>
-        <button class="option-btn" type="button" data-filter="robotica">Robotica</button>
-        <button class="option-btn" type="button" data-filter="datos">Datos</button>
+      <p class="eyebrow">Vista del profesor</p>
+      <h1>Panel docente</h1>
+      <p class="hero-description">Vista simulada para monitorear intereses STEM del aula, detectar estudiantes que necesitan apoyo y explicar la arquitectura tecnica del prototipo.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#teacherRoot">Ver aula</a>
+        <a class="btn btn-secondary" href="#systemRoot">Ver sistema</a>
       </div>
     </section>
 
-    <section class="section">
-      <div id="projectGrid" class="project-grid"></div>
+    <section id="teacherRoot" class="section"></section>
+
+    <section class="section architecture-section">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Sistema simulado</p>
+        <h2>APIs, base de datos y seguridad representadas para la exposicion.</h2>
+      </div>
+      <div id="systemRoot" class="system-grid reveal"></div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div><strong>GRAN MENTE</strong><p>Universidad | Curso | Año 2026</p></div>
-    <div><p>Mini proyectos para exposicion academica</p></div>
+    <div><strong>GRAN MENTE</strong><p>Panel docente y arquitectura simulada</p></div>
+    <div><p>Demo estatica compatible con GitHub Pages</p></div>
   </footer>
 
   <script src="script.js"></script>
