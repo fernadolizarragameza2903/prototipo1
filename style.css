@@ -100,6 +100,17 @@ input {
   box-shadow: 0 16px 45px rgba(0, 0, 0, 0.2);
 }
 
+body:not(.logged-in) .main-nav,
+body:not(.logged-in) .menu-toggle,
+body:not(.logged-in) main > section:not(#login),
+body:not(.logged-in) .site-footer {
+  display: none;
+}
+
+body.logged-in #login {
+  display: none;
+}
+
 .brand,
 .main-nav,
 .hero-actions,
@@ -171,6 +182,227 @@ input {
   margin-top: -74px;
   padding: 150px max(16px, calc((100vw - 1180px) / 2)) 92px;
   overflow: hidden;
+}
+
+.login-section {
+  display: grid;
+  grid-template-columns: minmax(0, 1.06fr) minmax(320px, 0.94fr);
+  gap: 20px;
+  align-items: stretch;
+  padding-top: 92px;
+  padding-bottom: 34px;
+}
+
+body:not(.logged-in) .login-section {
+  min-height: calc(100vh - 86px);
+  align-items: center;
+  padding-top: 48px;
+}
+
+.login-card,
+.student-panel,
+.stem-option {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow);
+}
+
+.login-card,
+.student-panel {
+  border-radius: 24px;
+  padding: 28px;
+}
+
+.login-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.74fr);
+  gap: 24px;
+  grid-column: 1 / -1;
+  align-items: center;
+}
+
+.login-card h1 {
+  font-size: clamp(2.8rem, 6vw, 5.8rem);
+}
+
+.login-form {
+  display: grid;
+  gap: 14px;
+}
+
+.login-form label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.login-form input,
+.login-form select {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 0 14px;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.08);
+  outline: none;
+}
+
+.login-form select {
+  color-scheme: dark;
+}
+
+.login-form input:focus,
+.login-form select:focus {
+  border-color: rgba(77, 232, 255, 0.62);
+  box-shadow: 0 0 0 4px rgba(77, 232, 255, 0.12);
+}
+
+.login-hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.student-panel {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 20px;
+}
+
+.student-benefits {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.student-benefits article {
+  display: grid;
+  gap: 8px;
+  min-height: 120px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.student-benefits span {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.stem-layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 20px;
+}
+
+.stem-sidebar,
+.stem-content {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow);
+  border-radius: 22px;
+}
+
+.stem-sidebar {
+  position: sticky;
+  top: 96px;
+  align-self: start;
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+}
+
+.stem-content {
+  min-height: 520px;
+  padding: 26px;
+}
+
+.stem-hamburger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 74px;
+  border: 0;
+  padding: 18px;
+  color: var(--text);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+.stem-hamburger.active,
+.stem-hamburger:hover {
+  border-radius: 18px;
+  background: rgba(77, 232, 255, 0.12);
+}
+
+.hamburger-lines {
+  display: grid;
+  gap: 5px;
+  width: 34px;
+  padding: 8px;
+  border: 1px solid rgba(77, 232, 255, 0.32);
+  border-radius: 12px;
+  background: rgba(77, 232, 255, 0.1);
+}
+
+.hamburger-lines i {
+  display: block;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--cyan);
+}
+
+.stem-content h3 {
+  margin-bottom: 10px;
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
+}
+
+.stem-content p,
+.stem-list li {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.stem-content-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.stem-info-card {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.stem-info-card h4 {
+  margin: 0 0 10px;
+  color: var(--text);
+}
+
+.stem-list {
+  display: grid;
+  gap: 10px;
+  padding-left: 20px;
+  margin: 0;
+}
+
+.stem-video-link {
+  display: inline-flex;
+  width: fit-content;
+  margin-top: 12px;
+  color: var(--cyan);
+  font-weight: 800;
 }
 
 .hero::after {
@@ -988,8 +1220,23 @@ h1 {
 
 @media (max-width: 980px) {
   .survey-layout,
-  .two-column {
+  .two-column,
+  .login-section,
+  .login-card {
     grid-template-columns: 1fr;
+  }
+
+  .student-benefits,
+  .stem-content-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stem-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .stem-sidebar {
+    position: static;
   }
 
   .hero {
@@ -1051,6 +1298,8 @@ h1 {
   .recommendation-grid,
   .flow,
   .project-grid,
+  .student-benefits,
+  .stem-content-grid,
   .dashboard-grid {
     grid-template-columns: 1fr;
   }

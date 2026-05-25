@@ -1,4 +1,23 @@
 const STORAGE_KEY = "granMenteProgress";
+const STUDENT_KEY = "granMenteStudent";
+const DEMO_STUDENT = { name: "Fernando", grade: "5to de secundaria" };
+const DEMO_PROGRESS = {
+  surveys: 2,
+  xp: 1080,
+  scores: { programacion: 4, robotica: 2, logica: 2, ciencia: 1 },
+  answers: [
+    { question: "Que actividad te gusta mas?", answer: "Crear videojuegos", key: "programacion" },
+    { question: "Que tema te interesa mas?", answer: "Robots", key: "robotica" },
+    { question: "Como prefieres aprender?", answer: "Juegos", key: "programacion" },
+    { question: "Que habilidad te representa mas?", answer: "Logica", key: "logica" },
+    { question: "Que te gustaria crear?", answer: "Una app", key: "programacion" }
+  ],
+  history: [
+    { date: "24/5/2026", profile: "Programador del Futuro", main: "programacion" },
+    { date: "25/5/2026", profile: "Constructor Robotico", main: "robotica" }
+  ],
+  lastProfile: "programacion"
+};
 
 const questions = [
   {
@@ -167,6 +186,53 @@ const programmingPath = [
   }
 ];
 
+const stemRoutes = {
+  ciencia: {
+    title: "Ciencia",
+    subtitle: "Biotecnologia, ambiente, salud y experimentos escolares.",
+    themes: ["Metodo cientifico", "Biologia y genetica", "Quimica basica", "Cuidado ambiental"],
+    videos: [
+      { title: "Experimentos STEM para secundaria", url: "https://www.youtube.com/results?search_query=experimentos+stem+para+secundaria" },
+      { title: "Introduccion a la biotecnologia", url: "https://www.youtube.com/results?search_query=biotecnologia+para+estudiantes+secundaria" }
+    ],
+    projects: ["Mini invernadero con registro de crecimiento", "Filtro de agua casero", "Reporte de calidad del aire en la escuela"],
+    career: "Carreras relacionadas: Biotecnologia, Medicina, Ciencias Ambientales, Ingenieria Quimica."
+  },
+  tecnologia: {
+    title: "Tecnologia",
+    subtitle: "Programacion, inteligencia artificial, apps, videojuegos y datos.",
+    themes: ["HTML, CSS y JavaScript", "Inteligencia artificial", "Ciberseguridad", "Diseno de apps"],
+    videos: [
+      { title: "Aprender programacion desde cero", url: "https://www.youtube.com/results?search_query=programacion+desde+cero+para+estudiantes" },
+      { title: "Que es la inteligencia artificial", url: "https://www.youtube.com/results?search_query=que+es+la+inteligencia+artificial+para+estudiantes" }
+    ],
+    projects: ["Pagina web personal", "Chatbot con respuestas por palabras clave", "Mini videojuego de reflejos"],
+    career: "Carreras relacionadas: Ingenieria de Software, Ciencia de Datos, IA, Ciberseguridad."
+  },
+  ingenieria: {
+    title: "Ingenieria",
+    subtitle: "Robotica, estructuras, prototipos, maquinas y solucion de problemas.",
+    themes: ["Diseno de prototipos", "Robotica basica", "Electronica inicial", "Mecanismos y energia"],
+    videos: [
+      { title: "Introduccion a la robotica", url: "https://www.youtube.com/results?search_query=introduccion+a+la+robotica+para+estudiantes" },
+      { title: "Proyectos de ingenieria para secundaria", url: "https://www.youtube.com/results?search_query=proyectos+de+ingenieria+para+secundaria" }
+    ],
+    projects: ["Puente de palitos con prueba de resistencia", "Robot simulado en cuadricula", "Sistema de riego automatico maqueta"],
+    career: "Carreras relacionadas: Mecatronica, Robotica, Ingenieria Civil, Ingenieria Industrial."
+  },
+  matematicas: {
+    title: "Matematicas",
+    subtitle: "Logica, patrones, estadistica, predicciones y analisis de datos.",
+    themes: ["Estadistica", "Probabilidad", "Algebra aplicada", "Graficos e interpretacion de datos"],
+    videos: [
+      { title: "Estadistica facil para estudiantes", url: "https://www.youtube.com/results?search_query=estadistica+facil+para+estudiantes" },
+      { title: "Matematicas aplicadas a datos", url: "https://www.youtube.com/results?search_query=matematicas+aplicadas+a+ciencia+de+datos" }
+    ],
+    projects: ["Encuesta escolar con graficos", "Prediccion de notas con promedios", "Dashboard simple de habitos de estudio"],
+    career: "Carreras relacionadas: Ciencia de Datos, Estadistica, Economia, Ingenieria de Sistemas."
+  }
+};
+
 const miniProjects = [
   {
     title: "Calculadora STEM",
@@ -209,6 +275,22 @@ const miniProjects = [
     deliverable: "Panel con metricas y recomendaciones."
   },
   {
+    title: "Experimento de germinacion",
+    area: "ciencia",
+    level: "Inicial",
+    time: "35 min",
+    description: "Comparar el crecimiento de semillas con luz, sombra y poca agua.",
+    deliverable: "Tabla de observacion y conclusion cientifica."
+  },
+  {
+    title: "Puente resistente",
+    area: "ingenieria",
+    level: "Inicial",
+    time: "50 min",
+    description: "Disenar un puente con palitos y medir cuanto peso soporta.",
+    deliverable: "Prototipo fisico y registro de prueba."
+  },
+  {
     title: "Mision espacial interactiva",
     area: "espacio",
     level: "Inicial",
@@ -219,7 +301,7 @@ const miniProjects = [
 ];
 
 function loadProgress() {
-  const fallback = { surveys: 0, xp: 720, scores: {}, answers: [], history: [], lastProfile: "programacion" };
+  const fallback = { ...DEMO_PROGRESS };
   try {
     return { ...fallback, ...JSON.parse(localStorage.getItem(STORAGE_KEY)) };
   } catch {
@@ -229,6 +311,29 @@ function loadProgress() {
 
 function saveProgress(progress) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+}
+
+function loadStudent() {
+  try {
+    return JSON.parse(localStorage.getItem(STUDENT_KEY));
+  } catch {
+    return null;
+  }
+}
+
+function saveStudent(student) {
+  localStorage.setItem(STUDENT_KEY, JSON.stringify(student));
+}
+
+function clearStudent() {
+  localStorage.removeItem(STUDENT_KEY);
+}
+
+function ensureDemoProgress() {
+  const stored = loadProgress();
+  if (!localStorage.getItem(STORAGE_KEY) || !Object.keys(stored.scores || {}).length) {
+    saveProgress(DEMO_PROGRESS);
+  }
 }
 
 function getMaturity(surveys) {
@@ -379,6 +484,116 @@ function setupSurvey() {
   renderQuestion();
 }
 
+function setupStudentLogin() {
+  const form = document.querySelector("#loginForm");
+  const panel = document.querySelector("#studentPanel");
+  const welcome = document.querySelector("#welcomeStudent");
+  const logout = document.querySelector("#logoutStudent");
+  if (!form) {
+    document.body.classList.add("logged-in");
+    return;
+  }
+
+  const showPanel = (student) => {
+    if (welcome) welcome.textContent = `Hola, ${student.name} de ${student.grade}`;
+    document.body.classList.add("logged-in");
+    if (panel) panel.hidden = true;
+    form.closest(".login-card").style.display = "none";
+    window.location.hash = "inicio";
+  };
+
+  const showForm = () => {
+    document.body.classList.remove("logged-in");
+    if (panel) panel.hidden = true;
+    form.closest(".login-card").style.display = "grid";
+    window.location.hash = "login";
+  };
+
+  const storedStudent = loadStudent();
+  if (storedStudent?.name === DEMO_STUDENT.name) {
+    showPanel(storedStudent);
+  } else {
+    showForm();
+  }
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const name = document.querySelector("#studentName").value.trim();
+    const grade = document.querySelector("#studentGrade").value;
+    const password = document.querySelector("#studentPassword").value.trim();
+    const hint = form.querySelector(".login-hint");
+
+    if (name.toLowerCase() !== "fernando" || password !== "12345") {
+      hint.textContent = "Usuario o contrasena incorrectos. Usa Fernando y 12345.";
+      return;
+    }
+
+    const student = { name: "Fernando", grade, loginDate: new Date().toLocaleDateString("es-PE") };
+    saveStudent(student);
+    ensureDemoProgress();
+    hint.textContent = "Ingreso correcto.";
+    showPanel(student);
+  });
+
+  logout?.addEventListener("click", () => {
+    clearStudent();
+    form.reset();
+    showForm();
+  });
+}
+
+function setupStemHamburgers() {
+  const buttons = document.querySelectorAll(".stem-hamburger");
+  const content = document.querySelector("#stemContent");
+  if (!buttons.length || !content) return;
+
+  const renderRoute = (key) => {
+    const route = stemRoutes[key] || stemRoutes.ciencia;
+    content.innerHTML = `
+      <div class="fade-swap">
+        <p class="eyebrow">Ruta: ${route.title}</p>
+        <h3>${route.title}</h3>
+        <p>${route.subtitle}</p>
+        <div class="message-box">${route.career}</div>
+        <div class="stem-content-grid">
+          <section class="stem-info-card">
+            <h4>Temas para aprender</h4>
+            <ul class="stem-list">
+              ${route.themes.map((theme) => `<li>${theme}</li>`).join("")}
+            </ul>
+          </section>
+          <section class="stem-info-card">
+            <h4>Videos recomendados</h4>
+            <ul class="stem-list">
+              ${route.videos.map((video) => `<li><a class="stem-video-link" href="${video.url}" target="_blank" rel="noopener">${video.title}</a></li>`).join("")}
+            </ul>
+          </section>
+          <section class="stem-info-card">
+            <h4>Proyectos sugeridos</h4>
+            <ul class="stem-list">
+              ${route.projects.map((project) => `<li>${project}</li>`).join("")}
+            </ul>
+          </section>
+        </div>
+      </div>
+    `;
+  };
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      buttons.forEach((item) => {
+        item.classList.remove("active");
+        item.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add("active");
+      button.setAttribute("aria-pressed", "true");
+      renderRoute(button.dataset.stem);
+    });
+  });
+
+  renderRoute("ciencia");
+}
+
 function getAiReply(text) {
   const value = text.toLowerCase();
   const progress = loadProgress();
@@ -432,11 +647,29 @@ function setupProjects() {
   const grid = document.querySelector("#projectGrid");
   if (!grid) return;
   const filters = document.querySelectorAll("[data-filter]");
+  const intro = document.querySelector("#projectIntro");
 
-  const render = (filter = "todos") => {
+  const render = (filter = "recomendados") => {
     const progress = loadProgress();
     const topKey = getTopKey(progress.scores);
-    const list = miniProjects.filter((project) => filter === "todos" || project.area === filter || (filter === "recomendados" && project.area === topKey));
+    const relatedAreas = {
+      programacion: ["programacion", "ia", "datos"],
+      logica: ["datos", "programacion", "ia"],
+      ciencia: ["ciencia", "datos"],
+      ingenieria: ["ingenieria", "robotica"],
+      robotica: ["robotica", "ingenieria", "programacion"],
+      espacio: ["espacio", "ingenieria", "datos"]
+    };
+    const recommendedAreas = relatedAreas[topKey] || ["programacion", "ia"];
+    const list = miniProjects.filter((project) => (
+      filter === "todos" ||
+      project.area === filter ||
+      (filter === "recomendados" && recommendedAreas.includes(project.area))
+    ));
+    if (intro) {
+      const profile = profiles[progress.lastProfile] || profiles[topKey] || profiles.programacion;
+      intro.innerHTML = `<strong>Fernando:</strong> segun sus respuestas, su perfil actual es <strong>${profile.name}</strong>. Por eso GRAN MENTE prioriza proyectos de ${recommendedAreas.join(", ")}.`;
+    }
     grid.innerHTML = list.map((project) => `
       <article class="project-card reveal visible">
         <span>${project.level} · ${project.time}</span>
@@ -455,7 +688,7 @@ function setupProjects() {
     });
   });
 
-  render();
+  render("recomendados");
 }
 
 function setupDashboard() {
@@ -597,7 +830,10 @@ function setupParticles() {
   window.addEventListener("resize", resize);
 }
 
+ensureDemoProgress();
 setupSurvey();
+setupStudentLogin();
+setupStemHamburgers();
 setupChatbot();
 setupProjects();
 setupDashboard();

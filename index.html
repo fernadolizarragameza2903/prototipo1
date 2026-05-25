@@ -20,6 +20,7 @@
     <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false">☰</button>
     <nav class="main-nav" aria-label="Navegacion principal">
       <a href="index.html">Inicio</a>
+      <a href="#carreras-stem">Carreras STEM</a>
       <a href="proyectos.html">Mini proyectos</a>
       <a href="ia.html">IA interactiva</a>
       <a href="dashboard.html">Dashboard</a>
@@ -27,6 +28,38 @@
   </header>
 
   <main>
+    <section id="login" class="section login-section">
+      <div class="login-card reveal">
+        <div>
+          <p class="eyebrow">Acceso del estudiante</p>
+          <h1>Login GRAN MENTE</h1>
+          <p class="hero-description">Ingresa como alumno de 5to de secundaria para desbloquear una vista personalizada de lo que la plataforma brinda.</p>
+        </div>
+
+        <form id="loginForm" class="login-form">
+          <label>
+            Nombre del alumno
+            <input id="studentName" type="text" value="Fernando" placeholder="Ejemplo: Fernando" required>
+          </label>
+          <label>
+            Grado
+            <select id="studentGrade" required>
+              <option value="5to de secundaria">5to de secundaria</option>
+              <option value="4to de secundaria">4to de secundaria</option>
+              <option value="3ro de secundaria">3ro de secundaria</option>
+            </select>
+          </label>
+          <label>
+            Contrasena demo
+            <input id="studentPassword" type="password" placeholder="12345" required>
+          </label>
+          <button class="btn btn-primary" type="submit">Ingresar a la plataforma</button>
+          <p class="login-hint">Maqueta: puedes usar cualquier nombre y la contrasena demo 12345.</p>
+        </form>
+      </div>
+
+    </section>
+
     <section id="inicio" class="hero section">
       <div class="hero-copy reveal">
         <p class="eyebrow">Plataforma EdTech con IA simulada</p>
@@ -45,6 +78,35 @@
         <div class="floating-chip chip-a">IA</div>
         <div class="floating-chip chip-b">STEM</div>
         <div class="floating-chip chip-c">XP +250</div>
+      </div>
+    </section>
+
+    <section id="carreras-stem" class="section stem-explorer">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Explorador STEM lateral</p>
+        <h2>Elige una ruta y GRAN MENTE te muestra temas, videos y proyectos relacionados.</h2>
+      </div>
+      <div class="stem-layout reveal">
+        <aside class="stem-sidebar" aria-label="Rutas STEM">
+          <button class="stem-hamburger active" type="button" data-stem="ciencia" aria-pressed="true">
+            <span class="hamburger-lines"><i></i><i></i><i></i></span>
+            <strong>Ciencia</strong>
+          </button>
+          <button class="stem-hamburger" type="button" data-stem="tecnologia" aria-pressed="false">
+            <span class="hamburger-lines"><i></i><i></i><i></i></span>
+            <strong>Tecnologia</strong>
+          </button>
+          <button class="stem-hamburger" type="button" data-stem="ingenieria" aria-pressed="false">
+            <span class="hamburger-lines"><i></i><i></i><i></i></span>
+            <strong>Ingenieria</strong>
+          </button>
+          <button class="stem-hamburger" type="button" data-stem="matematicas" aria-pressed="false">
+            <span class="hamburger-lines"><i></i><i></i><i></i></span>
+            <strong>Matematicas</strong>
+          </button>
+        </aside>
+
+        <article id="stemContent" class="stem-content" aria-live="polite"></article>
       </div>
     </section>
 
