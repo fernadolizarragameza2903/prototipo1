@@ -4,6 +4,10 @@
 
 GRAN MENTE es un prototipo web educativo para orientar estudiantes hacia carreras STEM mediante una experiencia moderna, responsive y visualmente impactante. La maqueta simula IA, recomendaciones personalizadas, dashboard del alumno, panel docente, arquitectura tecnica, APIs, base de datos y seguridad.
 
+## Resumen de lo realizado
+
+Se desarrollo una maqueta web completa para presentar la idea de GRAN MENTE como plataforma EdTech. El proyecto incluye una landing page, login demo, encuesta vocacional con resultados STEM, recomendaciones de carreras, videojuegos y videos, chatbot IA simulado, dashboard del alumno, mini proyectos, panel docente y una arquitectura simulada con APIs, base de datos y seguridad. Todo funciona de forma estatica con HTML, CSS y JavaScript, usando `localStorage` para simular persistencia de datos.
+
 ## Objetivo
 
 Demostrar como una plataforma EdTech podria ayudar a estudiantes de secundaria a descubrir intereses en ciencia, tecnologia, ingenieria y matematicas usando encuestas, gamificacion y recomendaciones dinamicas.
@@ -21,6 +25,15 @@ Demostrar como una plataforma EdTech podria ayudar a estudiantes de secundaria a
 - APIs simuladas, base de datos propuesta y controles de seguridad.
 - Persistencia local con `localStorage`.
 - Diseno responsive para laptop, tablet y celular.
+
+## Entregables del trabajo
+
+- [3. Prototipo tipo Balsamiq](docs/prototipo-balsamiq.md): pantallas que se deben presentar y capturas sugeridas.
+- [4. Diagrama de arquitectura](docs/arquitectura.md): capas del sistema y explicacion tecnica.
+- [5. Estructura del repositorio GitHub](docs/estructura-github.md): organizacion de carpetas y buenas practicas.
+- [6. Seleccion tecnologica justificada](docs/seleccion-tecnologica.md): motivo de uso de cada tecnologia.
+- [7. Codigo funcional inicial](docs/codigo-funcional.md): funciones que deben demostrarse en la maqueta.
+- [8. Enlace GitHub](docs/enlace-github.md): recomendaciones para presentar repositorio, commits y GitHub Pages.
 
 ## Tecnologias
 
@@ -48,6 +61,13 @@ prototipo1/
 |   `-- estilos.css
 |-- js/
 |   `-- main.js
+|-- docs/
+|   |-- prototipo-balsamiq.md
+|   |-- arquitectura.md
+|   |-- estructura-github.md
+|   |-- seleccion-tecnologica.md
+|   |-- codigo-funcional.md
+|   `-- enlace-github.md
 |-- img/
 |   `-- hero-brain.png
 `-- README.md
@@ -100,9 +120,12 @@ prototipo1/
 ## Datos academicos
 
 - Proyecto: GRAN MENTE
-- Curso: Completar
-- Universidad: Completar
-- Integrantes: Completar
+- Curso: DISENO DE PRODUCTOS Y SERVICIOS
+- Docente: GUEVARA JIMENEZ, JORGE ALFREDO
+- Integrantes:
+  - Gaslac, Jose Victor - U23247247
+  - Lizarraga Meza, Fernando Daniel - U23250629
+  - Pacco Gavidia, Iago Luciano - U25267964
 - Anio: 2026
 
 ## Nota
