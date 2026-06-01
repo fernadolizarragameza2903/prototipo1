@@ -102,6 +102,7 @@ input {
 
 body:not(.logged-in) .main-nav,
 body:not(.logged-in) .menu-toggle,
+body:not(.logged-in) .user-menu,
 body:not(.logged-in) main > section:not(#login),
 body:not(.logged-in) .site-footer {
   display: none;
@@ -141,6 +142,99 @@ body.logged-in #login {
 
 .main-nav {
   gap: 8px;
+}
+
+.user-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.user-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.08);
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.user-trigger:hover {
+  transform: translateY(-1px);
+  background: rgba(255,255,255,0.12);
+}
+
+.user-avatar {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--cyan), var(--violet));
+  color: #071020;
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.user-name {
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.user-chevron {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.user-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  min-width: 220px;
+  padding: 8px 0;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(7,8,22,0.96);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+  backdrop-filter: blur(20px);
+  z-index: 30;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.user-dropdown.open {
+  display: block;
+  opacity: 1;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 12px 18px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background: rgba(255,255,255,0.06);
+}
+
+.dropdown-item.logout {
+  color: #ff6b6b;
+  font-weight: 700;
 }
 
 .main-nav a {

@@ -26,6 +26,18 @@
       <a href="dashboard.html">Dashboard</a>
       <a href="docente.html">Docente</a>
     </nav>
+    <div class="user-menu" id="studentPanel">
+      <button class="user-trigger" type="button" id="studentToggle" aria-haspopup="true" aria-expanded="false">
+        <span class="user-avatar" id="studentAvatar">F</span>
+        <span class="user-name" id="studentNameLabel">Estudiante</span>
+        <span class="user-chevron">▾</span>
+      </button>
+      <div class="user-dropdown" id="userDropdown">
+        <a class="dropdown-item" href="dashboard.html">Mi dashboard</a>
+        <a class="dropdown-item" href="index.html#encuesta">Hacer encuesta</a>
+        <button class="dropdown-item logout" type="button" id="logoutStudent">Cerrar sesión</button>
+      </div>
+    </div>
   </header>
 
   <main>
