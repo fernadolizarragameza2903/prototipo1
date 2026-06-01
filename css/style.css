@@ -141,7 +141,27 @@ body.logged-in #login {
 }
 
 .main-nav {
+  display: flex;
+  flex-wrap: nowrap;
   gap: 8px;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.main-nav::-webkit-scrollbar {
+  height: 6px;
+}
+
+.main-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.main-nav::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.15);
+  border-radius: 999px;
 }
 
 .user-menu {
@@ -212,6 +232,86 @@ body.logged-in #login {
 .user-dropdown.open {
   display: block;
   opacity: 1;
+}
+
+.logout-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  background: rgba(7, 8, 22, 0.92);
+  padding: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.logout-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.logout-panel {
+  width: min(420px, 100%);
+  padding: 2rem;
+  border-radius: 28px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(8, 12, 30, 0.98);
+  box-shadow: 0 32px 70px rgba(0, 0, 0, 0.45);
+  position: relative;
+}
+
+.logout-panel h2 {
+  margin: 0 0 0.5rem;
+}
+
+.logout-panel p {
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+
+.logout-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.logout-form label {
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.logout-form input,
+.logout-form select {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.05);
+  color: var(--text);
+}
+
+.logout-form .btn {
+  width: 100%;
+}
+
+.logout-form .logout-hint {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.close-modal {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1.4rem;
+  cursor: pointer;
 }
 
 .dropdown-item {
@@ -1505,27 +1605,29 @@ h1 {
 
 @media (max-width: 720px) {
   .site-header {
-    align-items: flex-start;
+    align-items: center;
     border-radius: 24px;
   }
 
   .menu-toggle {
-    display: block;
+    display: none;
   }
 
   .main-nav {
-    position: absolute;
-    top: calc(100% + 8px);
-    right: 0;
-    left: 0;
-    display: none;
-    flex-direction: column;
-    align-items: stretch;
-    padding: 12px;
-    border: 1px solid var(--line);
-    border-radius: 22px;
-    background: rgba(7, 8, 22, 0.92);
-    backdrop-filter: blur(18px);
+    position: static;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    backdrop-filter: none;
+  }
+
+  .main-nav a {
+    white-space: nowrap;
   }
 
   .main-nav.open {

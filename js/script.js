@@ -642,10 +642,17 @@ function setupStudentLogin() {
     }
   });
 
+  const openLogoutModal = setupLogoutModal(() => {
+    if (form) {
+      form.reset();
+      showForm();
+      return;
+    }
+    window.location.href = "index.html#login";
+  });
+
   logout?.addEventListener("click", () => {
-    clearStudent();
-    if (form) form.reset();
-    showForm();
+    openLogoutModal?.();
   });
 }
 
@@ -1011,6 +1018,91 @@ function setupMenu() {
     nav.classList.remove("open");
     toggle.setAttribute("aria-expanded", "false");
   });
+}
+
+function setupLogoutModal(onLogoutConfirmed) {
+  if (document.querySelector("#logoutOverlay")) return;
+
+  const overlay = document.createElement("div");
+  overlay.id = "logoutOverlay";
+  overlay.className = "logout-overlay";
+  overlay.hidden = true;
+  overlay.innerHTML = `
+    <div class="logout-panel" role="dialog" aria-modal="true" aria-labelledby="logoutModalTitle">
+      <button class="close-modal" type="button" id="closeLogoutModal" aria-label="Cerrar formulario de sesión">×</button>
+      <h2 id="logoutModalTitle">Cerrar sesión</h2>
+      <p>Para confirmar tu salida, ingresa Nombre, Grado y Contraseña Demo.</p>
+      <form id="logoutForm" class="logout-form">
+        <label>
+          Nombre
+          <input id="logoutName" type="text" placeholder="Fernando" required>
+        </label>
+        <label>
+          Grado
+          <select id="logoutGrade" required>
+            <option value="5to de secundaria">5to de secundaria</option>
+            <option value="4to de secundaria">4to de secundaria</option>
+            <option value="3ro de secundaria">3ro de secundaria</option>
+          </select>
+        </label>
+        <label>
+          Contraseña Demo
+          <input id="logoutPassword" type="password" placeholder="12345" required>
+        </label>
+        <button class="btn btn-primary" type="submit">Confirmar cierre</button>
+        <p class="logout-hint">Usa Fernando / 12345 para continuar.</p>
+      </form>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  const closeButton = overlay.querySelector("#closeLogoutModal");
+  const logoutForm = overlay.querySelector("#logoutForm");
+  const logoutHint = overlay.querySelector(".logout-hint");
+  const logoutName = overlay.querySelector("#logoutName");
+
+  const closeModal = () => {
+    overlay.classList.remove("open");
+    setTimeout(() => {
+      overlay.hidden = true;
+    }, 200);
+  };
+
+  const openModal = () => {
+    overlay.hidden = false;
+    requestAnimationFrame(() => overlay.classList.add("open"));
+    logoutName.focus();
+  };
+
+  closeButton?.addEventListener("click", closeModal);
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) closeModal();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && overlay.classList.contains("open")) {
+      closeModal();
+    }
+  });
+
+  logoutForm?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const name = logoutName.value.trim();
+    const password = overlay.querySelector("#logoutPassword").value.trim();
+
+    if (name.toLowerCase() !== "fernando" || password !== "12345") {
+      logoutHint.textContent = "Usuario o contraseña incorrectos. Usa Fernando / 12345.";
+      return;
+    }
+
+    logoutHint.textContent = "Cerrando sesión...";
+    closeModal();
+    clearStudent();
+    onLogoutConfirmed();
+  });
+
+  return openModal;
 }
 
 function setupParticles() {
