@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel docente | GRAN MENTE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="logged-in">
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+  <div th:replace="~{fragments/layout :: header}"></div>
+
+  <main class="page-main">
+    <section class="section narrow page-hero">
+      <p class="eyebrow">Vista del profesor</p>
+      <h1>Panel docente</h1>
+      <p class="hero-description">Vista para monitorear intereses STEM del aula, detectar estudiantes que necesitan apoyo y explicar la arquitectura tecnica del prototipo.</p>
+      <div class="hero-actions"><a class="btn btn-primary" href="#teacherRoot">Ver aula</a><a class="btn btn-secondary" href="#systemRoot">Ver sistema</a></div>
+    </section>
+
+    <section id="teacherRoot" class="section">
+      <section class="dashboard-grid">
+        <article class="metric-card"><span>Estudiantes monitoreados</span><strong th:text="${dashboard.estudiantes}">0</strong></article>
+        <article class="metric-card"><span>Madurez promedio</span><strong th:text="${dashboard.madurezPromedio + '/5'}">0/5</strong></article>
+        <article class="metric-card"><span>XP acumulado del aula</span><strong th:text="${dashboard.xpAula}">0</strong></article>
+        <article class="metric-card"><span>Rutas dominantes</span><strong th:text="${#lists.size(dashboard.perfilesFrecuentes)}">0</strong></article>
+      </section>
+      <section class="two-column dashboard-block">
+        <article class="glass-card">
+          <p class="eyebrow">Alertas docentes</p>
+          <h2>Seguimiento rapido del aula</h2>
+          <div class="learning-list"><article th:each="alerta : ${dashboard.alertas}"><span>Alerta</span><h4 th:text="${alerta}">Alerta</h4><p>Revisar desde el panel docente.</p></article></div>
+        </article>
+        <article class="glass-card">
+          <p class="eyebrow">Perfiles frecuentes</p>
+          <h2>Intereses que aparecen en el curso</h2>
+          <div class="badges"><span th:each="profile : ${dashboard.perfilesFrecuentes}" th:text="${profile}">Perfil</span></div>
+          <p class="result-copy">La vista docente permite planificar equipos, retos y recursos segun los intereses detectados.</p>
+        </article>
+      </section>
+      <section class="glass-card dashboard-block">
+        <p class="eyebrow">Tabla de estudiantes</p>
+        <h2>Reporte del aula</h2>
+        <div class="table-wrap">
+          <table class="teacher-table">
+            <thead><tr><th>Alumno</th><th>Grado</th><th>Perfil</th><th>Madurez</th><th>XP</th><th>Estado</th></tr></thead>
+            <tbody>
+              <tr th:each="student : ${dashboard.resumenes}">
+                <td th:text="${student.nombre}">Alumno</td><td th:text="${student.grado}">Grado</td><td th:text="${student.perfil}">Perfil</td><td th:text="${student.madurez + '/5'}">1/5</td><td th:text="${student.xp}">0</td><td><span class="status-pill" th:text="${student.estado}">Activo</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <section class="section architecture-section">
+      <div class="section-heading reveal"><p class="eyebrow">Sistema real</p><h2>APIs, base de datos y seguridad implementadas para la exposicion.</h2></div>
+      <div id="systemRoot" class="system-grid reveal">
+        <article class="system-card"><p class="eyebrow">APIs</p><h3>Endpoints del prototipo</h3><div class="endpoint-list"><div class="endpoint-row"><strong>POST</strong><span>/login</span><em>Spring Security</em><p>Valida credenciales con BCrypt y crea sesion.</p></div><div class="endpoint-row"><strong>POST</strong><span>/encuesta</span><em>200 OK</em><p>Analiza respuestas y guarda perfil STEM.</p></div><div class="endpoint-row"><strong>POST</strong><span>/api/ai/chat</span><em>200 OK</em><p>Responde usando progreso real del alumno.</p></div></div></article>
+        <article class="system-card"><p class="eyebrow">Base de datos</p><h3>Modelo persistente</h3><div class="db-list"><div><strong>students</strong><span>id, nombre, grado, rol, password_hash</span></div><div><strong>surveys / answers</strong><span>historial de encuestas y respuestas</span></div><div><strong>student_progress</strong><span>xp, puntajes y perfil dominante</span></div></div></article>
+        <article class="system-card"><p class="eyebrow">Seguridad</p><h3>Controles aplicados</h3><ul class="stem-list"><li>Roles ESTUDIANTE y DOCENTE.</li><li>Rutas protegidas por rol.</li><li>API key por variable de entorno.</li><li>DTOs para vistas y endpoints.</li></ul></article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div><strong>GRAN MENTE</strong><p>Panel docente conectado al backend</p></div><div><p>Spring Boot + JPA + Security</p></div></footer>
+  <div th:replace="~{fragments/layout :: logout-modal}"></div>
+  <script th:src="@{/js/app.js}"></script>
+</body>
+</html>

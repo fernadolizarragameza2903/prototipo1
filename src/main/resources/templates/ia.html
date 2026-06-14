@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="_csrf" th:content="${_csrf.token}">
+  <meta name="_csrf_header" th:content="${_csrf.headerName}">
+  <title>IA interactiva | GRAN MENTE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="logged-in">
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+  <div th:replace="~{fragments/layout :: header}"></div>
+
+  <main class="page-main">
+    <section class="section two-column ai-page">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Asistente IA</p>
+        <h1>Habla con GRAN MENTE IA</h1>
+        <p class="hero-description">La IA responde breve y usa el progreso guardado para recomendar carreras, proyectos y rutas de programacion.</p>
+        <div class="prompt-chips"><span>Que carrera estudio?</span><span>Recomiendame un proyecto</span><span>Cual es mi nivel de madurez?</span><span>Me gustan los videojuegos</span></div>
+      </div>
+
+      <div id="chatbot" class="chatbot reveal">
+        <div class="chat-header"><div><span class="status-dot"></span><strong>GRAN MENTE IA</strong></div><span>Servicio</span></div>
+        <div id="chatMessages" class="chat-messages">
+          <div class="bot-message" th:text="'Hola ' + ${progress.nombre} + '. Tu perfil actual es ' + ${progress.perfil.nombre} + '. Preguntame por carreras, proyectos o madurez.'">Hola.</div>
+        </div>
+        <form id="chatForm" class="chat-form">
+          <input id="chatInput" type="text" placeholder="Ej: recomiendame un proyecto" autocomplete="off">
+          <button type="submit">Enviar</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div><strong>GRAN MENTE</strong><p>IA con fallback basado en reglas</p></div><div><p>Preparado para Spring AI</p></div></footer>
+  <div th:replace="~{fragments/layout :: logout-modal}"></div>
+  <script th:src="@{/js/app.js}"></script>
+</body>
+</html>

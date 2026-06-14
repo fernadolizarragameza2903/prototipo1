@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | GRAN MENTE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="logged-in">
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+  <div th:replace="~{fragments/layout :: header}"></div>
+
+  <main class="page-main">
+    <section class="section narrow page-hero">
+      <p class="eyebrow">Rendimiento y madurez</p>
+      <h1>Dashboard del alumno</h1>
+      <p class="hero-description">El panel crece con cada encuesta. Mientras mas respuestas registra el alumno, mayor es su madurez vocacional y mas precisas son las recomendaciones.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" th:href="@{/#encuesta}">Resolver encuesta</a>
+        <a class="btn btn-secondary" th:href="@{/proyectos}">Practicar proyectos</a>
+      </div>
+    </section>
+
+    <section id="dashboardRoot" class="section">
+      <section class="dashboard-grid">
+        <article class="metric-card"><span>Encuestas resueltas</span><strong th:text="${progress.encuestas}">0</strong></article>
+        <article class="metric-card"><span>XP STEM</span><strong th:text="${progress.xp}">0</strong></article>
+        <article class="metric-card"><span>Nivel de madurez</span><strong th:text="${progress.madurez.nivel}">1</strong></article>
+        <article class="metric-card"><span>Perfil dominante</span><strong th:text="${progress.perfil.nombre}">Perfil</strong></article>
+      </section>
+      <section class="two-column dashboard-block">
+        <article class="glass-card">
+          <p class="eyebrow" th:text="${progress.madurez.nombre}">Madurez</p>
+          <h2 th:text="${progress.madurez.detalle}">Detalle</h2>
+          <div class="progress-track"><div class="progress-fill" th:style="'width:' + ${progress.madurez.nivel * 20} + '%'"></div></div>
+          <p class="result-copy">La madurez aumenta cada vez que completas una encuesta. Con mas datos, GRAN MENTE reduce recomendaciones genericas y muestra rutas mas concretas.</p>
+        </article>
+        <article class="glass-card">
+          <p class="eyebrow">Intereses detectados</p>
+          <div th:if="${#lists.isEmpty(progress.intereses)}"><p class="result-copy">Aun no hay encuestas registradas.</p></div>
+          <div class="interest-row" th:each="score : ${progress.intereses}">
+            <span th:text="${score.key}">programacion</span>
+            <div class="progress-track"><div class="progress-fill" th:style="'width:' + ${score.porcentaje} + '%'"></div></div>
+          </div>
+        </article>
+      </section>
+      <section class="glass-card">
+        <p class="eyebrow">Recomendaciones mas precisas</p>
+        <h2>Ruta sugerida segun tus respuestas acumuladas</h2>
+        <div class="learning-list">
+          <article th:each="item : ${progress.recomendaciones}">
+            <span th:text="${item.nivel}">Inicial</span>
+            <h4 th:text="${item.titulo}">Titulo</h4>
+            <p th:text="${item.motivo}">Motivo</p>
+          </article>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div><strong>GRAN MENTE</strong><p>Progreso guardado en PostgreSQL</p></div><div><p>MVC + DTO + Spring Security</p></div></footer>
+  <div th:replace="~{fragments/layout :: logout-modal}"></div>
+  <script th:src="@{/js/app.js}"></script>
+</body>
+</html>

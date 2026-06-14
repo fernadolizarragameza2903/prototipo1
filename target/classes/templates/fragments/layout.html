@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<body>
+<header class="site-header" th:fragment="header">
+  <a class="brand" th:href="@{/}"><span class="brand-mark">GM</span><span>GRAN MENTE</span></a>
+  <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false">&#9776;</button>
+  <nav class="main-nav" aria-label="Navegacion principal">
+    <a th:href="@{/}">Inicio</a>
+    <a th:href="@{/#encuesta}">Encuesta</a>
+    <a th:href="@{/proyectos}">Mini proyectos</a>
+    <a th:href="@{/#carreras-stem}">Carreras STEM</a>
+    <a th:href="@{/ia}">IA interactiva</a>
+    <a th:href="@{/dashboard}">Dashboard</a>
+    <a th:href="@{/docente}" sec:authorize="hasRole('DOCENTE')">Docente</a>
+  </nav>
+  <div class="user-menu" id="studentPanel" sec:authorize="isAuthenticated()">
+    <button class="user-trigger" type="button" id="studentToggle" aria-haspopup="true" aria-expanded="false">
+      <span class="user-avatar" id="studentAvatar" th:text="${currentUser != null ? #strings.substring(currentUser.nombre,0,1) : 'G'}">F</span>
+      <span class="user-name" id="studentNameLabel" th:text="${currentUser != null ? currentUser.nombre : 'Estudiante'}">Estudiante</span>
+      <span class="user-chevron">v</span>
+    </button>
+    <div class="user-dropdown" id="userDropdown">
+      <a class="dropdown-item" th:href="@{/dashboard}">Mi dashboard</a>
+      <a class="dropdown-item" th:href="@{/#encuesta}">Hacer encuesta</a>
+      <button class="dropdown-item logout" type="button" id="logoutStudent">Cerrar sesion</button>
+    </div>
+  </div>
+</header>
+
+<div th:fragment="logout-modal" class="logout-overlay" id="logoutOverlay" hidden>
+  <div class="logout-panel" role="dialog" aria-modal="true" aria-labelledby="logoutModalTitle">
+    <button class="close-modal" type="button" id="closeLogoutModal" aria-label="Cerrar formulario de sesion">x</button>
+    <h2 id="logoutModalTitle">Cerrar sesion</h2>
+    <p>Para confirmar tu salida, ingresa Nombre, Grado y Contrasena.</p>
+    <form th:action="@{/logout-confirm}" method="post" class="logout-form">
+      <label>
+        Nombre
+        <input name="nombre" type="text" th:value="${currentUser != null ? currentUser.nombre : ''}" required>
+      </label>
+      <label>
+        Grado
+        <select name="grado" required>
+          <option value="5to de secundaria" th:selected="${currentUser != null && currentUser.grado == '5to de secundaria'}">5to de secundaria</option>
+          <option value="4to de secundaria" th:selected="${currentUser != null && currentUser.grado == '4to de secundaria'}">4to de secundaria</option>
+          <option value="3ro de secundaria" th:selected="${currentUser != null && currentUser.grado == '3ro de secundaria'}">3ro de secundaria</option>
+          <option value="Docente" th:selected="${currentUser != null && currentUser.grado == 'Docente'}">Docente</option>
+        </select>
+      </label>
+      <label>
+        Contrasena
+        <input name="password" type="password" placeholder="12345" required>
+      </label>
+      <button class="btn btn-primary" type="submit">Confirmar cierre</button>
+      <p class="logout-hint" th:text="${logoutError ?: 'Tus datos se validan contra la base de datos.'}">Tus datos se validan contra la base de datos.</p>
+    </form>
+  </div>
+</div>
+</body>
+</html>
