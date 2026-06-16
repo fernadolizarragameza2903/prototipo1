@@ -9,6 +9,7 @@ import java.util.List;
 public class RutaStem {
 
     @Id
+    @Column(name = "route_key")
     private String key;
 
     private String titulo;
