@@ -174,19 +174,20 @@ body.logged-in #login {
 .user-trigger {
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.58rem;
   border: 1px solid rgba(255,255,255,0.14);
   border-radius: 999px;
-  padding: 10px 14px;
+  padding: 8px 12px 8px 8px;
   background: rgba(255,255,255,0.08);
   color: var(--text);
   cursor: pointer;
-  transition: transform 0.2s ease, background 0.2s ease;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
 }
 
 .user-trigger:hover {
   transform: translateY(-1px);
   background: rgba(255,255,255,0.12);
+  border-color: rgba(77, 232, 255, 0.38);
 }
 
 .user-avatar {
@@ -199,6 +200,39 @@ body.logged-in #login {
   color: #071020;
   font-weight: 800;
   font-size: 0.95rem;
+}
+
+.user-icon {
+  position: relative;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(248, 251, 255, 0.76);
+  border-radius: 50%;
+}
+
+.user-icon::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 3px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(248, 251, 255, 0.82);
+  transform: translateX(-50%);
+}
+
+.user-icon::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 3px;
+  width: 10px;
+  height: 5px;
+  border-radius: 999px 999px 0 0;
+  background: rgba(248, 251, 255, 0.82);
+  transform: translateX(-50%);
 }
 
 .user-name {
@@ -224,14 +258,17 @@ body.logged-in #login {
   box-shadow: 0 24px 60px rgba(0,0,0,0.35);
   backdrop-filter: blur(20px);
   z-index: 30;
-  display: none;
+  visibility: hidden;
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transform: translateY(-6px) scale(0.98);
+  transform-origin: top right;
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
 }
 
 .user-dropdown.open {
-  display: block;
+  visibility: visible;
   opacity: 1;
+  transform: translateY(0) scale(1);
 }
 
 .logout-overlay {
@@ -255,11 +292,17 @@ body.logged-in #login {
 .logout-panel {
   width: min(420px, 100%);
   padding: 2rem;
-  border-radius: 28px;
+  border-radius: 24px;
   border: 1px solid rgba(255,255,255,0.14);
   background: rgba(8, 12, 30, 0.98);
   box-shadow: 0 32px 70px rgba(0, 0, 0, 0.45);
   position: relative;
+  transform: translateY(12px) scale(0.98);
+  transition: transform 0.2s ease;
+}
+
+.logout-overlay.open .logout-panel {
+  transform: translateY(0) scale(1);
 }
 
 .logout-panel h2 {
@@ -271,36 +314,14 @@ body.logged-in #login {
   margin-bottom: 1.5rem;
 }
 
-.logout-form {
+.logout-actions {
   display: grid;
-  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
 }
 
-.logout-form label {
-  display: grid;
-  gap: 0.5rem;
-  font-size: 0.95rem;
-  color: var(--text);
-}
-
-.logout-form input,
-.logout-form select {
+.logout-actions .btn {
   width: 100%;
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 16px;
-  padding: 12px 14px;
-  background: rgba(255,255,255,0.05);
-  color: var(--text);
-}
-
-.logout-form .btn {
-  width: 100%;
-}
-
-.logout-form .logout-hint {
-  margin: 0;
-  font-size: 0.92rem;
-  color: var(--muted);
 }
 
 .close-modal {
@@ -1606,24 +1627,33 @@ h1 {
 @media (max-width: 720px) {
   .site-header {
     align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
     border-radius: 24px;
   }
 
   .menu-toggle {
-    display: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.08);
   }
 
   .main-nav {
-    position: static;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: center;
-    padding: 0;
-    border: none;
-    border-radius: 0;
-    background: transparent;
-    backdrop-filter: none;
+    order: 4;
+    display: none;
+    flex: 1 0 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.06);
+    overflow: visible;
   }
 
   .main-nav a {
@@ -1632,6 +1662,23 @@ h1 {
 
   .main-nav.open {
     display: flex;
+  }
+
+  .user-menu {
+    margin-left: auto;
+  }
+
+  .user-name {
+    display: none;
+  }
+
+  .user-dropdown {
+    right: -54px;
+    min-width: 230px;
+  }
+
+  .logout-actions {
+    grid-template-columns: 1fr;
   }
 
   .section {

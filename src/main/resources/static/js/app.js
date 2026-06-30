@@ -3,11 +3,12 @@ class GranMenteUi {
     this.elements = {
       menuToggle: document.querySelector(".menu-toggle"),
       mainNav: document.querySelector(".main-nav"),
-      userToggle: document.querySelector("#studentToggle"),
+      userToggle: document.querySelector("#userToggle"),
       userDropdown: document.querySelector("#userDropdown"),
-      logoutButton: document.querySelector("#logoutStudent"),
+      logoutButtons: document.querySelectorAll(".js-logout-trigger"),
       logoutOverlay: document.querySelector("#logoutOverlay"),
       closeLogoutModal: document.querySelector("#closeLogoutModal"),
+      cancelLogout: document.querySelector("#cancelLogout"),
       chatForm: document.querySelector("#chatForm"),
       chatInput: document.querySelector("#chatInput"),
       chatMessages: document.querySelector("#chatMessages")
@@ -51,9 +52,11 @@ class GranMenteUi {
   }
 
   setupLogoutModal() {
-    const { logoutButton, logoutOverlay, closeLogoutModal } = this.elements;
-    if (!logoutButton || !logoutOverlay) return;
+    const { logoutButtons, logoutOverlay, closeLogoutModal, cancelLogout, userDropdown, userToggle } = this.elements;
+    if (!logoutButtons.length || !logoutOverlay) return;
     const openModal = () => {
+      userDropdown?.classList.remove("open");
+      userToggle?.setAttribute("aria-expanded", "false");
       logoutOverlay.hidden = false;
       requestAnimationFrame(() => logoutOverlay.classList.add("open"));
     };
@@ -63,8 +66,9 @@ class GranMenteUi {
         logoutOverlay.hidden = true;
       }, 200);
     };
-    logoutButton.addEventListener("click", openModal);
+    logoutButtons.forEach((button) => button.addEventListener("click", openModal));
     closeLogoutModal?.addEventListener("click", closeModal);
+    cancelLogout?.addEventListener("click", closeModal);
     logoutOverlay.addEventListener("click", (event) => {
       if (event.target === logoutOverlay) closeModal();
     });

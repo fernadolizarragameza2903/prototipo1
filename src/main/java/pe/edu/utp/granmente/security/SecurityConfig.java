@@ -20,7 +20,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/registro", "/css/**", "/js/**", "/img/**", "/actuator/health").permitAll()
                         .requestMatchers("/docente/**").hasRole("DOCENTE")
-                        .requestMatchers("/dashboard/**", "/ia/**", "/proyectos/**", "/encuesta/**", "/api/ai/**", "/logout-confirm").hasRole("ESTUDIANTE")
+                        .requestMatchers("/dashboard/**", "/encuesta/**").hasRole("ESTUDIANTE")
+                        .requestMatchers("/ia/**", "/proyectos/**", "/api/ai/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
@@ -28,7 +29,11 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login")
                         .usernameParameter("email")
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/dashboard", true)
+                        .successHandler((request, response, authentication) -> {
+                            boolean isTeacher = authentication.getAuthorities().stream()
+                                    .anyMatch(authority -> "ROLE_DOCENTE".equals(authority.getAuthority()));
+                            response.sendRedirect(isTeacher ? "/docente" : "/dashboard");
+                        })
                         .failureUrl("/?error=true")
                         .permitAll()
                 )

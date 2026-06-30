@@ -20,8 +20,11 @@
       <p class="eyebrow">Practica sin encuesta</p>
       <h1>Mini proyectos STEM</h1>
       <p class="hero-description">Actividades rapidas para que el alumno aprenda haciendo. Los recomendados se ordenan segun sus respuestas guardadas.</p>
-      <div id="projectIntro" class="message-box">
+      <div id="projectIntro" class="message-box" th:if="${!isTeacher}">
         <strong th:text="${progress.nombre}">Alumno</strong>: tu perfil actual es <strong th:text="${progress.perfil.nombre}">Perfil</strong>.
+      </div>
+      <div class="message-box" th:if="${isTeacher}">
+        <strong th:text="${currentUser.nombre}">Docente</strong>: revisa estos mini proyectos para asignarlos o usarlos como retroalimentacion en clase.
       </div>
       <div class="filter-bar">
         <a class="option-btn" th:classappend="${filtro == 'todos'} ? 'active'" th:href="@{/proyectos(filtro='todos')}">Todos</a>

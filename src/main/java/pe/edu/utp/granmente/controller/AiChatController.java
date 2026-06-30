@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.utp.granmente.dto.ai.ChatRequestDto;
 import pe.edu.utp.granmente.dto.ai.ChatResponseDto;
+import pe.edu.utp.granmente.entity.Rol;
+import pe.edu.utp.granmente.entity.Usuario;
 import pe.edu.utp.granmente.service.AiService;
 import pe.edu.utp.granmente.service.ProgressService;
 import pe.edu.utp.granmente.service.UserService;
@@ -27,8 +29,13 @@ public class AiChatController {
 
     @GetMapping("/ia")
     public String chat(Model model, Principal principal) {
-        model.addAttribute("currentUser", userService.getCurrentUser(principal.getName()));
-        model.addAttribute("progress", progressService.getProgress(principal.getName()));
+        Usuario currentUser = userService.getCurrentUser(principal.getName());
+        boolean isTeacher = currentUser.getRol() == Rol.DOCENTE;
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("isTeacher", isTeacher);
+        if (!isTeacher) {
+            model.addAttribute("progress", progressService.getProgress(principal.getName()));
+        }
         return "ia";
     }
 

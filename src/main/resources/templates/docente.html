@@ -19,8 +19,8 @@
     <section class="section narrow page-hero">
       <p class="eyebrow">Vista del profesor</p>
       <h1>Panel docente</h1>
-      <p class="hero-description">Vista para monitorear intereses STEM del aula, detectar estudiantes que necesitan apoyo y explicar la arquitectura tecnica del prototipo.</p>
-      <div class="hero-actions"><a class="btn btn-primary" href="#teacherRoot">Ver aula</a><a class="btn btn-secondary" href="#systemRoot">Ver sistema</a></div>
+      <p class="hero-description">Vista para monitorear intereses STEM del aula y detectar estudiantes que necesitan apoyo.</p>
+      <div class="hero-actions"><a class="btn btn-primary" href="#teacherRoot">Ver aula</a></div>
     </section>
 
     <section id="teacherRoot" class="section">
@@ -59,14 +59,6 @@
       </section>
     </section>
 
-    <section class="section architecture-section">
-      <div class="section-heading reveal"><p class="eyebrow">Sistema real</p><h2>APIs, base de datos y seguridad implementadas para la exposicion.</h2></div>
-      <div id="systemRoot" class="system-grid reveal">
-        <article class="system-card"><p class="eyebrow">APIs</p><h3>Endpoints del prototipo</h3><div class="endpoint-list"><div class="endpoint-row"><strong>POST</strong><span>/login</span><em>Spring Security</em><p>Valida credenciales con BCrypt y crea sesion.</p></div><div class="endpoint-row"><strong>POST</strong><span>/encuesta</span><em>200 OK</em><p>Analiza respuestas y guarda perfil STEM.</p></div><div class="endpoint-row"><strong>POST</strong><span>/api/ai/chat</span><em>200 OK</em><p>Responde usando progreso real del alumno.</p></div></div></article>
-        <article class="system-card"><p class="eyebrow">Base de datos</p><h3>Modelo persistente</h3><div class="db-list"><div><strong>students</strong><span>id, nombre, grado, rol, password_hash</span></div><div><strong>surveys / answers</strong><span>historial de encuestas y respuestas</span></div><div><strong>student_progress</strong><span>xp, puntajes y perfil dominante</span></div></div></article>
-        <article class="system-card"><p class="eyebrow">Seguridad</p><h3>Controles aplicados</h3><ul class="stem-list"><li>Roles ESTUDIANTE y DOCENTE.</li><li>Rutas protegidas por rol.</li><li>API key por variable de entorno.</li><li>DTOs para vistas y endpoints.</li></ul></article>
-      </div>
-    </section>
   </main>
 
   <footer class="site-footer"><div><strong>GRAN MENTE</strong><p>Panel docente conectado al backend</p></div><div><p>Spring Boot + JPA + Security</p></div></footer>
