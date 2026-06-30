@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini proyectos | GRAN MENTE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="logged-in">
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+  <div th:replace="~{fragments/layout :: header}"></div>
+
+  <main class="page-main">
+    <section class="section narrow page-hero">
+      <p class="eyebrow">Practica sin encuesta</p>
+      <h1>Mini proyectos STEM</h1>
+      <p class="hero-description">Actividades rapidas para que el alumno aprenda haciendo. Los recomendados se ordenan segun sus respuestas guardadas.</p>
+      <div id="projectIntro" class="message-box" th:if="${!isTeacher}">
+        <strong th:text="${progress.nombre}">Alumno</strong>: tu perfil actual es <strong th:text="${progress.perfil.nombre}">Perfil</strong>.
+      </div>
+      <div class="message-box" th:if="${isTeacher}">
+        <strong th:text="${currentUser.nombre}">Docente</strong>: revisa estos mini proyectos para asignarlos o usarlos como retroalimentacion en clase.
+      </div>
+      <div class="filter-bar">
+        <a class="option-btn" th:classappend="${filtro == 'todos'} ? 'active'" th:href="@{/proyectos(filtro='todos')}">Todos</a>
+        <a class="option-btn" th:classappend="${filtro == 'recomendados'} ? 'active'" th:href="@{/proyectos(filtro='recomendados')}">Recomendados</a>
+        <a class="option-btn" th:classappend="${filtro == 'programacion'} ? 'active'" th:href="@{/proyectos(filtro='programacion')}">Programacion</a>
+        <a class="option-btn" th:classappend="${filtro == 'ia'} ? 'active'" th:href="@{/proyectos(filtro='ia')}">IA demo</a>
+        <a class="option-btn" th:classappend="${filtro == 'ciencia'} ? 'active'" th:href="@{/proyectos(filtro='ciencia')}">Ciencia</a>
+        <a class="option-btn" th:classappend="${filtro == 'ingenieria'} ? 'active'" th:href="@{/proyectos(filtro='ingenieria')}">Ingenieria</a>
+        <a class="option-btn" th:classappend="${filtro == 'robotica'} ? 'active'" th:href="@{/proyectos(filtro='robotica')}">Robotica</a>
+        <a class="option-btn" th:classappend="${filtro == 'datos'} ? 'active'" th:href="@{/proyectos(filtro='datos')}">Datos</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div id="projectGrid" class="project-grid">
+        <article class="project-card reveal visible" th:each="project : ${proyectos}">
+          <span th:text="${project.nivel + ' - ' + project.duracion}">Inicial - 30 min</span>
+          <h3 th:text="${project.titulo}">Titulo</h3>
+          <p th:text="${project.descripcion}">Descripcion</p>
+          <div class="message-box"><strong>Entregable:</strong> <span th:text="${project.entregable}">Entregable</span></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div><strong>GRAN MENTE</strong><p>Universidad | Curso | Ano 2026</p></div><div><p>Mini proyectos desde backend</p></div></footer>
+  <div th:replace="~{fragments/layout :: logout-modal}"></div>
+  <script th:src="@{/js/app.js}"></script>
+</body>
+</html>

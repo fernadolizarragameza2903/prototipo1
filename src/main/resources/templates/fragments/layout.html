@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<body>
+<header class="site-header" th:fragment="header">
+  <a class="brand" th:href="@{/}"><span class="brand-mark">GM</span><span>GRAN MENTE</span></a>
+  <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false">&#9776;</button>
+  <nav class="main-nav" aria-label="Navegacion principal">
+    <a th:href="@{/}">Inicio</a>
+    <a th:href="@{/#encuesta}" sec:authorize="hasRole('ESTUDIANTE')">Encuesta</a>
+    <a th:href="@{/proyectos}">Mini proyectos</a>
+    <a th:href="@{/#carreras-stem}">Carreras STEM</a>
+    <a th:href="@{/ia}">IA interactiva</a>
+    <a th:href="@{/dashboard}" sec:authorize="hasRole('ESTUDIANTE')">Dashboard</a>
+    <a th:href="@{/docente}" sec:authorize="hasRole('DOCENTE')">Dashboard</a>
+  </nav>
+  <div class="user-menu" id="userPanel" sec:authorize="isAuthenticated()">
+    <button class="user-trigger" type="button" id="userToggle" aria-haspopup="true" aria-expanded="false">
+      <span class="user-avatar" id="userAvatar" th:text="${currentUser != null ? #strings.substring(currentUser.nombre,0,1) : 'G'}">F</span>
+      <span class="user-icon" aria-hidden="true"></span>
+      <span class="user-name" id="userNameLabel" th:text="${currentUser != null ? currentUser.nombre : 'Usuario'}">Usuario</span>
+      <span class="user-chevron">v</span>
+    </button>
+    <div class="user-dropdown" id="userDropdown">
+      <a class="dropdown-item" th:href="@{/dashboard}" sec:authorize="hasRole('ESTUDIANTE')">Ir al Dashboard</a>
+      <a class="dropdown-item" th:href="@{/#encuesta}" sec:authorize="hasRole('ESTUDIANTE')">Hacer una encuesta</a>
+      <a class="dropdown-item" th:href="@{/docente}" sec:authorize="hasRole('DOCENTE')">Ir al Dashboard</a>
+      <a class="dropdown-item" th:href="@{/ia}" sec:authorize="hasRole('DOCENTE')">Ir a la IA Interactiva</a>
+      <button class="dropdown-item logout js-logout-trigger" type="button">Cerrar sesion</button>
+    </div>
+  </div>
+</header>
+
+<div th:fragment="logout-modal" class="logout-overlay" id="logoutOverlay" hidden>
+  <div class="logout-panel" role="dialog" aria-modal="true" aria-labelledby="logoutModalTitle" aria-describedby="logoutModalText">
+    <button class="close-modal" type="button" id="closeLogoutModal" aria-label="Cerrar confirmacion">x</button>
+    <h2 id="logoutModalTitle">Cerrar sesión</h2>
+    <p id="logoutModalText">¿Estás seguro de cerrar sesión?</p>
+    <form th:action="@{/logout}" method="post" class="logout-actions">
+      <button class="btn btn-secondary" type="button" id="cancelLogout">No</button>
+      <button class="btn btn-primary" type="submit">Sí</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>
