@@ -26,14 +26,6 @@ spring:
   thymeleaf:
     cache: false
 
-  ai:
-    openai:
-      api-key: sk-proj-xxxxx
-      chat:
-        options:
-          model: gpt-4o-mini
-          max-completion-tokens: 500
-
 server:
   port: 8080
   servlet:
@@ -45,6 +37,9 @@ app:
     enabled: true
   ai:
     fallback-enabled: true
+    gemini:
+      api-key: ${GCP_API_KEY}
+      model: gemini-2.5-flash
 
 management:
   endpoints:
@@ -54,4 +49,4 @@ management:
 
 logging:
   level:
-    pe.edu.utp.granmente: INFO
+    pe.edu.utp.granmente: INFO    

@@ -18,7 +18,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/registro", "/css/**", "/js/**", "/img/**", "/actuator/health").permitAll()
+                        .requestMatchers("/", "/login", "/registro", "/css/**", "/js/**", "/img/**", "/actuator/health").permitAll()
                         .requestMatchers("/docente/**").hasRole("DOCENTE")
                         .requestMatchers("/dashboard/**", "/encuesta/**").hasRole("ESTUDIANTE")
                         .requestMatchers("/ia/**", "/proyectos/**", "/api/ai/**").authenticated()
@@ -32,7 +32,7 @@ public class SecurityConfig {
                         .successHandler((request, response, authentication) -> {
                             boolean isTeacher = authentication.getAuthorities().stream()
                                     .anyMatch(authority -> "ROLE_DOCENTE".equals(authority.getAuthority()));
-                            response.sendRedirect(isTeacher ? "/docente" : "/dashboard");
+                            response.sendRedirect(isTeacher ? "/docente" : "/");
                         })
                         .failureUrl("/?error=true")
                         .permitAll()

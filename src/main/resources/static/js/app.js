@@ -11,7 +11,9 @@ class GranMenteUi {
       cancelLogout: document.querySelector("#cancelLogout"),
       chatForm: document.querySelector("#chatForm"),
       chatInput: document.querySelector("#chatInput"),
-      chatMessages: document.querySelector("#chatMessages")
+      chatMessages: document.querySelector("#chatMessages"),
+      micButton: document.querySelector("#micButton"),
+      micStatus: document.querySelector("#micStatus")
     };
   }
 
@@ -24,6 +26,7 @@ class GranMenteUi {
     this.setupCounters();
     this.setupReveal();
     this.setupParticles();
+    this.setupVoice();
   }
 
   setupMenu() {
@@ -116,29 +119,74 @@ class GranMenteUi {
           body: JSON.stringify({ message: text })
         });
         const data = await response.json();
-        this.addChatMessage(data.message || "No pude responder en este momento.", false);
+        const reply = data.message || "No pude responder en este momento.";
+        this.addChatMessage(reply, false);
       } catch {
-        this.addChatMessage("No pude conectar con el servicio de IA. Intenta otra vez.", false);
+        const err = "No pude conectar con el servicio de IA. Intenta otra vez.";
+        this.addChatMessage(err, false);
       }
     });
   }
 
-  csrfToken() {
-    return document.querySelector("meta[name='_csrf']")?.content || "";
+  setupVoice() {
+    const { micButton, micStatus, chatInput, chatForm } = this.elements;
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!micButton) return;
+    if (!SpeechRec) {
+      micButton.disabled = true;
+      micButton.title = "Micrófono no soportado";
+      if (micStatus) micStatus.textContent = "Reconocimiento de voz no soportado en este navegador.";
+      return;
+    }
+    const recognition = new SpeechRec();
+    recognition.lang = "es-PE";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    let listening = false;
+    micButton.addEventListener("click", () => {
+      if (!listening) {
+        recognition.start();
+      } else {
+        recognition.stop();
+      }
+    });
+    recognition.addEventListener("start", () => {
+      listening = true;
+      micButton.classList.add("listening");
+      if (micStatus) micStatus.textContent = "Escuchando... habla ahora.";
+    });
+    recognition.addEventListener("end", () => {
+      listening = false;
+      micButton.classList.remove("listening");
+      if (micStatus) micStatus.textContent = "Listo.";
+    });
+    recognition.addEventListener("result", (event) => {
+      const transcript = Array.from(event.results).map(r => r[0].transcript).join("");
+      if (chatInput) chatInput.value = transcript;
+      if (micStatus) micStatus.textContent = "Texto reconocido: " + transcript;
+      if (chatForm) {
+        setTimeout(() => chatForm.requestSubmit(), 0);
+      }
+    });
+    recognition.addEventListener("error", (ev) => {
+      if (micStatus) {
+        if (ev.error === "not-allowed") {
+          micStatus.textContent = "Permiso de micrófono denegado. Habilita el acceso al micrófono en el navegador.";
+        } else {
+          micStatus.textContent = "Error de reconocimiento: " + (ev.error || "desconocido");
+        }
+      }
+    });
+    // voice recognition setup complete
   }
 
-  csrfHeader() {
-    return document.querySelector("meta[name='_csrf_header']")?.content || "X-CSRF-TOKEN";
-  }
-
-  addChatMessage(message, isUser) {
-    const { chatMessages } = this.elements;
-    if (!chatMessages) return;
-    const node = document.createElement("div");
-    node.className = isUser ? "user-message" : "bot-message";
-    node.textContent = message;
-    chatMessages.appendChild(node);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+  setupReveal() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add("visible");
+      });
+    }, { threshold: 0.16 });
+    document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
   }
 
   setupCounters() {
@@ -161,13 +209,14 @@ class GranMenteUi {
     counters.forEach((counter) => observer.observe(counter));
   }
 
-  setupReveal() {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) entry.target.classList.add("visible");
-      });
-    }, { threshold: 0.16 });
-    document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
+  addChatMessage(text, fromUser) {
+    const { chatMessages } = this.elements;
+    if (!chatMessages) return;
+    const wrapper = document.createElement('div');
+    wrapper.className = fromUser ? 'user-message' : 'bot-message';
+    wrapper.textContent = text;
+    chatMessages.appendChild(wrapper);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
   }
 
   setupParticles() {
@@ -204,6 +253,16 @@ class GranMenteUi {
     resize();
     draw();
     window.addEventListener("resize", resize);
+  }
+
+  csrfHeader() {
+    const meta = document.querySelector('meta[name="_csrf_header"]');
+    return meta ? meta.getAttribute('content') : 'X-CSRF-TOKEN';
+  }
+
+  csrfToken() {
+    const meta = document.querySelector('meta[name="_csrf"]');
+    return meta ? meta.getAttribute('content') : '';
   }
 }
 

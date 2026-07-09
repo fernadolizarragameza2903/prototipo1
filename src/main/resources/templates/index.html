@@ -18,7 +18,7 @@
 
   <main>
     <section id="login" class="section login-section">
-      <div class="login-card reveal">
+      <div class="login-card">
         <div>
           <p class="eyebrow">Acceso del estudiante</p>
           <h1>Login GRAN MENTE</h1>
@@ -31,6 +31,7 @@
 
         <div>
           <form th:action="@{/login}" method="post" class="login-form">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <label>
               Correo
               <input name="email" type="email" value="fernando@granmente.edu" required>
@@ -167,7 +168,7 @@
           <div class="profile-result fade-swap" th:if="${surveyResult}">
             <div class="profile-head"><span class="profile-icon" th:text="${surveyResult.perfil.icono}">PC</span><div><p class="eyebrow">Perfil STEM</p><h3 th:text="${surveyResult.perfil.nombre}">Perfil</h3></div></div>
             <p class="result-copy" th:text="${surveyResult.perfil.descripcion}">Descripcion</p>
-            <div class="message-box"><strong>IA:</strong> resultado guardado en PostgreSQL. XP total: <span th:text="${surveyResult.xpTotal}">0</span></div>
+            <div class="message-box"><strong>IA:</strong> Tu resultado se guardó bien. ¡Tu puntaje total es <span th:text="${surveyResult.xpTotal}">0</span> XP!</div>
             
             <h3>Carreras recomendadas</h3>
             <div class="recommendation-grid"><span class="career-pill" th:each="career : ${surveyResult.perfil.carreras}" th:text="${career}">Carrera</span></div>

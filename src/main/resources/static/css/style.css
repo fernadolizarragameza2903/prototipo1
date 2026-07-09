@@ -103,9 +103,12 @@ input {
 body:not(.logged-in) .main-nav,
 body:not(.logged-in) .menu-toggle,
 body:not(.logged-in) .user-menu,
-body:not(.logged-in) main > section:not(#login),
 body:not(.logged-in) .site-footer {
   display: none;
+}
+
+body:not(.logged-in) #login {
+  display: block;
 }
 
 body.logged-in #login {
@@ -1533,6 +1536,14 @@ h1 {
 }
 
 .reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Ensure authenticated users see content even if IntersectionObserver
+   doesn't run (fixes cases where JS didn't add the .visible class).
+   This keeps the animation for unauthenticated visitors. */
+body.logged-in .reveal {
   opacity: 1;
   transform: translateY(0);
 }

@@ -2,6 +2,7 @@ package pe.edu.utp.granmente.controller;
 
 import java.security.Principal;
 import jakarta.validation.Valid;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -33,6 +34,20 @@ public class HomeController {
 
     @GetMapping("/")
     public String index(Model model, Principal principal) {
+        return prepareIndex(model, principal);
+    }
+
+    @GetMapping("/inicio")
+    public String inicioRedirect() {
+        return "redirect:/";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "redirect:/";
+    }
+
+    private String prepareIndex(Model model, Principal principal) {
         model.addAttribute("registerForm", new RegisterForm());
         model.addAttribute("surveyForm", new SurveySubmitForm());
         model.addAttribute("preguntas", catalogService.preguntas());
@@ -63,6 +78,6 @@ public class HomeController {
     @ModelAttribute("isAuthenticated")
     public boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getPrincipal());
+        return authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken);
     }
 }
