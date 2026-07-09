@@ -168,8 +168,19 @@
             <div class="profile-head"><span class="profile-icon" th:text="${surveyResult.perfil.icono}">PC</span><div><p class="eyebrow">Perfil STEM</p><h3 th:text="${surveyResult.perfil.nombre}">Perfil</h3></div></div>
             <p class="result-copy" th:text="${surveyResult.perfil.descripcion}">Descripcion</p>
             <div class="message-box"><strong>IA:</strong> resultado guardado en PostgreSQL. XP total: <span th:text="${surveyResult.xpTotal}">0</span></div>
+            
             <h3>Carreras recomendadas</h3>
             <div class="recommendation-grid"><span class="career-pill" th:each="career : ${surveyResult.perfil.carreras}" th:text="${career}">Carrera</span></div>
+            
+            <h3 th:text="${surveyResult.perfil.categoriaVideojuego}">Videojuego</h3>
+            <p class="result-copy"><strong th:text="${surveyResult.perfil.videojuego}">Nombre Videojuego</strong></p>
+            <p class="result-copy" th:text="${surveyResult.perfil.descripcionVideojuego}">Descripcion del videojuego</p>
+            
+            <h3 th:text="${surveyResult.perfil.video}">Video</h3>
+            <p class="result-copy" th:text="${surveyResult.perfil.descripcionVideo}">Descripcion del video</p>
+            <div class="message-box"><a th:href="${surveyResult.perfil.videoUrl}" target="_blank" class="btn btn-primary">Ver en YouTube</a></div>
+            
+            <div class="message-box" th:if="${surveyResult.perfil.mensaje}"><strong>Mensaje:</strong> <span th:text="${surveyResult.perfil.mensaje}">Mensaje personalizadon</span></div>
           </div>
           <div class="placeholder-result" th:unless="${surveyResult}">
             <span class="pulse-dot"></span>
