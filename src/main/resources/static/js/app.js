@@ -135,35 +135,40 @@ class GranMenteUi {
     const { micButton, micStatus, chatInput, chatForm } = this.elements;
     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!micButton) return;
+
     if (!SpeechRec) {
       micButton.disabled = true;
       micButton.title = "Micrófono no soportado";
       if (micStatus) micStatus.textContent = "Reconocimiento de voz no soportado en este navegador.";
       return;
     }
+
     const recognition = new SpeechRec();
     recognition.lang = "es-PE";
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.maxAlternatives = 1;
 
-    let listening = false;
-    let holdActive = false;
+    let isListening = false;
+    let isStarting = false;
 
     const setListeningState = (active) => {
-      listening = active;
+      isListening = active;
       micButton.classList.toggle("listening", active);
-      micButton.title = active ? "Sostén para hablar" : "Presiona y mantén para hablar";
+      micButton.setAttribute("aria-pressed", active ? "true" : "false");
+      micButton.title = active ? "Micrófono activo" : "Activar micrófono";
       if (micStatus) {
         micStatus.textContent = active ? "Escuchando... habla ahora." : "Listo.";
       }
     };
 
     const startListening = () => {
-      if (listening || !holdActive) return;
+      if (isListening || isStarting) return;
+      isStarting = true;
       try {
         recognition.start();
       } catch (error) {
+        isStarting = false;
         if (micStatus) {
           micStatus.textContent = "No se pudo iniciar el reconocimiento de voz.";
         }
@@ -171,47 +176,34 @@ class GranMenteUi {
     };
 
     const stopListening = () => {
-      if (!listening) return;
+      if (!isListening) return;
       try {
         recognition.stop();
       } catch (error) {
-        // Ignore stop errors and keep UI consistent.
+        setListeningState(false);
       }
     };
 
-    const handlePointerDown = (event) => {
-      event.preventDefault();
-      holdActive = true;
-      startListening();
-    };
-
-    const handlePointerUp = () => {
-      holdActive = false;
-      stopListening();
-    };
-
-    micButton.addEventListener("pointerdown", handlePointerDown);
-    micButton.addEventListener("pointerup", handlePointerUp);
-    micButton.addEventListener("pointerleave", handlePointerUp);
-    micButton.addEventListener("pointercancel", handlePointerUp);
-    micButton.addEventListener("touchstart", handlePointerDown, { passive: false });
-    micButton.addEventListener("touchend", handlePointerUp);
-    micButton.addEventListener("touchcancel", handlePointerUp);
-    window.addEventListener("pointerup", handlePointerUp);
-    window.addEventListener("touchend", handlePointerUp);
+    micButton.addEventListener("click", () => {
+      if (isListening) {
+        stopListening();
+      } else {
+        startListening();
+      }
+    });
 
     recognition.addEventListener("start", () => {
+      isStarting = false;
       setListeningState(true);
     });
+
     recognition.addEventListener("end", () => {
-      if (holdActive) {
-        setTimeout(() => {
-          startListening();
-        }, 150);
-        return;
+      if (isListening) {
+        setListeningState(false);
       }
-      setListeningState(false);
+      isStarting = false;
     });
+
     recognition.addEventListener("result", (event) => {
       const transcript = Array.from(event.results)
         .map((result) => result[0].transcript)
@@ -228,7 +220,9 @@ class GranMenteUi {
         }, 0);
       }
     });
+
     recognition.addEventListener("error", (ev) => {
+      isStarting = false;
       if (micStatus) {
         if (ev.error === "not-allowed") {
           micStatus.textContent = "Permiso de micrófono denegado. Habilita el acceso al micrófono en el navegador.";
@@ -236,10 +230,8 @@ class GranMenteUi {
           micStatus.textContent = "Error de reconocimiento: " + (ev.error || "desconocido");
         }
       }
-      holdActive = false;
       setListeningState(false);
     });
-    // voice recognition setup complete
   }
 
   setupReveal() {
