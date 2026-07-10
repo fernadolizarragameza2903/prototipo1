@@ -143,28 +143,79 @@ class GranMenteUi {
     }
     const recognition = new SpeechRec();
     recognition.lang = "es-PE";
-    recognition.interimResults = false;
+    recognition.continuous = true;
+    recognition.interimResults = true;
     recognition.maxAlternatives = 1;
+
     let listening = false;
-    micButton.addEventListener("click", () => {
-      if (!listening) {
-        recognition.start();
-      } else {
-        recognition.stop();
+    let holdActive = false;
+
+    const setListeningState = (active) => {
+      listening = active;
+      micButton.classList.toggle("listening", active);
+      micButton.title = active ? "Sostén para hablar" : "Presiona y mantén para hablar";
+      if (micStatus) {
+        micStatus.textContent = active ? "Escuchando... habla ahora." : "Listo.";
       }
-    });
+    };
+
+    const startListening = () => {
+      if (listening || !holdActive) return;
+      try {
+        recognition.start();
+      } catch (error) {
+        if (micStatus) {
+          micStatus.textContent = "No se pudo iniciar el reconocimiento de voz.";
+        }
+      }
+    };
+
+    const stopListening = () => {
+      if (!listening) return;
+      try {
+        recognition.stop();
+      } catch (error) {
+        // Ignore stop errors and keep UI consistent.
+      }
+    };
+
+    const handlePointerDown = (event) => {
+      event.preventDefault();
+      holdActive = true;
+      startListening();
+    };
+
+    const handlePointerUp = () => {
+      holdActive = false;
+      stopListening();
+    };
+
+    micButton.addEventListener("pointerdown", handlePointerDown);
+    micButton.addEventListener("pointerup", handlePointerUp);
+    micButton.addEventListener("pointerleave", handlePointerUp);
+    micButton.addEventListener("pointercancel", handlePointerUp);
+    micButton.addEventListener("touchstart", handlePointerDown, { passive: false });
+    micButton.addEventListener("touchend", handlePointerUp);
+    micButton.addEventListener("touchcancel", handlePointerUp);
+    window.addEventListener("pointerup", handlePointerUp);
+    window.addEventListener("touchend", handlePointerUp);
+
     recognition.addEventListener("start", () => {
-      listening = true;
-      micButton.classList.add("listening");
-      if (micStatus) micStatus.textContent = "Escuchando... habla ahora.";
+      setListeningState(true);
     });
     recognition.addEventListener("end", () => {
-      listening = false;
-      micButton.classList.remove("listening");
-      if (micStatus) micStatus.textContent = "Listo.";
+      if (holdActive) {
+        setTimeout(() => {
+          startListening();
+        }, 150);
+        return;
+      }
+      setListeningState(false);
     });
     recognition.addEventListener("result", (event) => {
-      const transcript = Array.from(event.results).map(r => r[0].transcript).join("");
+      const transcript = Array.from(event.results)
+        .map((result) => result[0].transcript)
+        .join("");
       if (chatInput) chatInput.value = transcript;
       if (micStatus) micStatus.textContent = "Texto reconocido: " + transcript;
       if (chatForm) {
@@ -185,6 +236,8 @@ class GranMenteUi {
           micStatus.textContent = "Error de reconocimiento: " + (ev.error || "desconocido");
         }
       }
+      holdActive = false;
+      setListeningState(false);
     });
     // voice recognition setup complete
   }
