@@ -118,8 +118,11 @@ class GranMenteUi {
           },
           body: JSON.stringify({ message: text })
         });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
         const data = await response.json();
-        const reply = data.message || "No pude responder en este momento.";
+        const reply = data?.message || "No pude responder en este momento.";
         this.addChatMessage(reply, false);
       } catch {
         const err = "No pude conectar con el servicio de IA. Intenta otra vez.";
@@ -165,7 +168,13 @@ class GranMenteUi {
       if (chatInput) chatInput.value = transcript;
       if (micStatus) micStatus.textContent = "Texto reconocido: " + transcript;
       if (chatForm) {
-        setTimeout(() => chatForm.requestSubmit(), 0);
+        setTimeout(() => {
+          if (typeof chatForm.requestSubmit === 'function') {
+            chatForm.requestSubmit();
+          } else {
+            chatForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+          }
+        }, 0);
       }
     });
     recognition.addEventListener("error", (ev) => {

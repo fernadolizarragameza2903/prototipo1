@@ -111,6 +111,10 @@ body:not(.logged-in) #login {
   display: block;
 }
 
+body:not(.logged-in) main > section:not(#login) {
+  display: none;
+}
+
 body.logged-in #login {
   display: none;
 }
