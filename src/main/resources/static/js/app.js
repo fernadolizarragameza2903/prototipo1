@@ -15,6 +15,11 @@ class GranMenteUi {
       micButton: document.querySelector("#micButton"),
       micStatus: document.querySelector("#micStatus")
     };
+    this.voiceRecognition = null;
+    this.voiceShouldListen = false;
+    this.voiceIsListening = false;
+    this.voiceIsStarting = false;
+    this.voiceRestartTimer = null;
   }
 
   init() {
@@ -135,6 +140,17 @@ class GranMenteUi {
     const { micButton, micStatus, chatInput, chatForm } = this.elements;
     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!micButton) return;
+    micButton.setAttribute("type", "button");
+
+    const isLocalhost = ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname);
+    if (!window.isSecureContext && !isLocalhost) {
+      micButton.disabled = true;
+      micButton.title = "El microfono requiere HTTPS";
+      if (micStatus) {
+        micStatus.textContent = "El reconocimiento de voz requiere HTTPS o localhost para acceder al microfono.";
+      }
+      return;
+    }
 
     if (!SpeechRec) {
       micButton.disabled = true;
@@ -143,17 +159,18 @@ class GranMenteUi {
       return;
     }
 
-    const recognition = new SpeechRec();
-    recognition.lang = "es-PE";
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    recognition.maxAlternatives = 1;
+    if (!this.voiceRecognition) {
+      this.voiceRecognition = new SpeechRec();
+      this.voiceRecognition.lang = "es-PE";
+      this.voiceRecognition.continuous = true;
+      this.voiceRecognition.interimResults = false;
+      this.voiceRecognition.maxAlternatives = 1;
+    }
 
-    let isListening = false;
-    let isStarting = false;
+    const recognition = this.voiceRecognition;
 
     const setListeningState = (active) => {
-      isListening = active;
+      this.voiceIsListening = active;
       micButton.classList.toggle("listening", active);
       micButton.setAttribute("aria-pressed", active ? "true" : "false");
       micButton.title = active ? "Micrófono activo" : "Activar micrófono";
@@ -163,12 +180,16 @@ class GranMenteUi {
     };
 
     const startListening = () => {
-      if (isListening || isStarting) return;
-      isStarting = true;
+      if (this.voiceIsListening || this.voiceIsStarting) return;
+      window.clearTimeout(this.voiceRestartTimer);
+      this.voiceShouldListen = true;
+      this.voiceIsStarting = true;
       try {
+        console.log("[SpeechRecognition] start() solicitado");
         recognition.start();
       } catch (error) {
-        isStarting = false;
+        this.voiceIsStarting = false;
+        console.error("[SpeechRecognition] No se pudo iniciar", error);
         if (micStatus) {
           micStatus.textContent = "No se pudo iniciar el reconocimiento de voz.";
         }
@@ -176,16 +197,38 @@ class GranMenteUi {
     };
 
     const stopListening = () => {
-      if (!isListening) return;
+      this.voiceShouldListen = false;
+      window.clearTimeout(this.voiceRestartTimer);
+      if (!this.voiceIsListening && !this.voiceIsStarting) return;
       try {
+        console.log("[SpeechRecognition] stop() solicitado por el usuario");
         recognition.stop();
       } catch (error) {
+        this.voiceIsStarting = false;
+        console.error("[SpeechRecognition] No se pudo detener", error);
         setListeningState(false);
       }
     };
 
-    micButton.addEventListener("click", () => {
-      if (isListening) {
+    const stopAfterError = () => {
+      this.voiceShouldListen = false;
+      this.voiceIsStarting = false;
+      window.clearTimeout(this.voiceRestartTimer);
+      if (this.voiceIsListening) {
+        try {
+          recognition.abort();
+        } catch (error) {
+          console.error("[SpeechRecognition] No se pudo abortar", error);
+        }
+      }
+      setListeningState(false);
+    };
+
+    micButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (this.voiceIsListening || this.voiceIsStarting) {
         stopListening();
       } else {
         startListening();
@@ -193,21 +236,36 @@ class GranMenteUi {
     });
 
     recognition.addEventListener("start", () => {
-      isStarting = false;
+      console.log("[SpeechRecognition] onstart");
+      this.voiceIsStarting = false;
       setListeningState(true);
     });
 
     recognition.addEventListener("end", () => {
-      if (isListening) {
+      console.log("[SpeechRecognition] onend", {
+        shouldListen: this.voiceShouldListen,
+        isListening: this.voiceIsListening
+      });
+      this.voiceIsStarting = false;
+
+      if (this.voiceShouldListen) {
+        this.voiceIsListening = false;
+        this.voiceRestartTimer = window.setTimeout(() => startListening(), 250);
+        return;
+      }
+
+      if (this.voiceIsListening) {
         setListeningState(false);
       }
-      isStarting = false;
     });
 
     recognition.addEventListener("result", (event) => {
       const transcript = Array.from(event.results)
         .map((result) => result[0].transcript)
-        .join("");
+        .join("")
+        .trim();
+      console.log("[SpeechRecognition] onresult", transcript);
+      if (!transcript) return;
       if (chatInput) chatInput.value = transcript;
       if (micStatus) micStatus.textContent = "Texto reconocido: " + transcript;
       if (chatForm) {
@@ -222,15 +280,27 @@ class GranMenteUi {
     });
 
     recognition.addEventListener("error", (ev) => {
-      isStarting = false;
+      console.error("[SpeechRecognition] onerror", ev.error, ev);
+      this.voiceIsStarting = false;
+
+      const fatalErrors = ["not-allowed", "service-not-allowed", "audio-capture", "network"];
+      if (fatalErrors.includes(ev.error)) stopAfterError();
       if (micStatus) {
-        if (ev.error === "not-allowed") {
+        if (ev.error === "not-allowed" || ev.error === "service-not-allowed") {
           micStatus.textContent = "Permiso de micrófono denegado. Habilita el acceso al micrófono en el navegador.";
+        } else if (ev.error === "audio-capture") {
+          micStatus.textContent = "No se detecto un microfono disponible.";
+        } else if (ev.error === "network") {
+          micStatus.textContent = "El servicio de voz del navegador no responde. Revisa tu conexion, usa Chrome/Edge y prueba en localhost o HTTPS.";
+        } else if (ev.error === "no-speech") {
+          micStatus.textContent = "No detecte voz. Sigue hablando o intenta de nuevo.";
         } else {
           micStatus.textContent = "Error de reconocimiento: " + (ev.error || "desconocido");
         }
       }
-      setListeningState(false);
+      if (!this.voiceShouldListen && !fatalErrors.includes(ev.error)) {
+        setListeningState(false);
+      }
     });
   }
 
